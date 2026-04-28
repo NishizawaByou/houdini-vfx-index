@@ -2,159 +2,64 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>特效技法索引 · 封面表格</title>
 <style>
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #f7f6f3;
-    color: #37352f;
-    font-size: 14px;
-  }
-  header {
-    position: sticky; top: 0; z-index: 100;
-    background: #fff; border-bottom: 1px solid #e3e2de;
-    padding: 16px 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f7f6f3; color: #37352f; font-size: 14px; }
+  header { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid #e3e2de; padding: 16px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
   h1 { margin: 0 0 12px; font-size: 22px; }
   .stats { color: #787774; font-size: 13px; margin-bottom: 12px; }
   .stats span { color: #37352f; font-weight: 500; }
-  .filter-row {
-    display: flex; align-items: flex-start; gap: 8px;
-    margin-top: 8px; flex-wrap: wrap;
-  }
-  .filter-row label {
-    font-size: 12px; color: #787774; padding: 6px 8px 0 0;
-    min-width: 56px; text-align: right;
-  }
-  .filter-group {
-    flex: 1; display: flex; flex-wrap: wrap; gap: 4px;
-    max-width: calc(100% - 64px);
-  }
-  .filter-btn {
-    border: 1px solid #e3e2de; background: #fff; padding: 4px 10px;
-    border-radius: 4px; font-size: 12px; cursor: pointer;
-    color: #37352f; transition: all 0.15s;
-  }
+  .filter-row { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .filter-row label { font-size: 12px; color: #787774; padding: 6px 8px 0 0; min-width: 56px; text-align: right; }
+  .filter-group { flex: 1; display: flex; flex-wrap: wrap; gap: 4px; max-width: calc(100% - 64px); }
+  .filter-btn { border: 1px solid #e3e2de; background: #fff; padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; color: #37352f; transition: all 0.15s; }
   .filter-btn:hover { background: #f1f0ed; }
-  .filter-btn.active {
-    background: #2383e2; color: #fff; border-color: #2383e2;
-  }
+  .filter-btn.active { background: #2383e2; color: #fff; border-color: #2383e2; }
   .filter-btn.active.author { background: #d44c47; border-color: #d44c47; }
   .filter-btn.active.module { background: #0f7b6c; border-color: #0f7b6c; }
   .filter-btn.active.effect { background: #cb912f; border-color: #cb912f; }
-  #search {
-    width: 280px; padding: 6px 10px; border: 1px solid #e3e2de;
-    border-radius: 4px; font-size: 13px; outline: none;
-  }
+  #search { width: 280px; padding: 6px 10px; border: 1px solid #e3e2de; border-radius: 4px; font-size: 13px; outline: none; }
   #search:focus { border-color: #2383e2; }
-  #reset {
-    margin-left: 8px; padding: 6px 14px; border: 1px solid #e3e2de;
-    background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;
-  }
+  #reset { margin-left: 8px; padding: 6px 14px; border: 1px solid #e3e2de; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; }
   #reset:hover { background: #f1f0ed; }
-
-  table {
-    width: 100%; border-collapse: collapse;
-    background: #fff;
-  }
-  thead {
-    position: sticky; top: 196px; z-index: 50;
-    background: #f7f6f3;
-  }
-  th {
-    text-align: left; padding: 10px 12px;
-    font-size: 12px; font-weight: 500; color: #787774;
-    border-bottom: 1px solid #e3e2de;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  td {
-    padding: 10px 12px; vertical-align: top;
-    border-bottom: 1px solid #ececea;
-  }
+  table { width: 100%; border-collapse: collapse; background: #fff; }
+  thead { position: sticky; top: 196px; z-index: 50; background: #f7f6f3; }
+  th { text-align: left; padding: 10px 12px; font-size: 12px; font-weight: 500; color: #787774; border-bottom: 1px solid #e3e2de; text-transform: uppercase; letter-spacing: 0.5px; }
+  td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid #ececea; }
   tr:hover td { background: #fafaf9; }
-
   .cover-cell { width: 320px; padding: 8px; }
-  .cover-cell img {
-    width: 100%; height: 180px; object-fit: cover;
-    border-radius: 6px; display: block;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .cover-cell img:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .no-cover {
-    width: 100%; height: 180px; background: #ececea;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 6px; color: #999;
-  }
-
+  .cover-cell img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; }
+  .cover-cell img:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .no-cover { width: 100%; height: 180px; background: #ececea; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #999; }
   .title-cell { width: 280px; }
-  .title-cell a {
-    color: #37352f; font-weight: 500; text-decoration: none;
-    line-height: 1.4; display: block;
-  }
+  .title-cell a { color: #37352f; font-weight: 500; text-decoration: none; line-height: 1.4; display: block; }
   .title-cell a:hover { color: #2383e2; text-decoration: underline; }
   .scene { color: #787774; font-size: 12px; margin-top: 6px; line-height: 1.5; }
-
-  .tag {
-    display: inline-block; padding: 2px 6px; margin: 2px 3px 2px 0;
-    border-radius: 3px; font-size: 11px; line-height: 1.4;
-    white-space: nowrap;
-  }
+  .tag { display: inline-block; padding: 2px 6px; margin: 2px 3px 2px 0; border-radius: 3px; font-size: 11px; line-height: 1.4; white-space: nowrap; }
   .tag-author { background: #fbe5e3; color: #c1352b; font-weight: 500; }
   .tag-module { background: #ddedea; color: #0f7b6c; }
   .tag-effect { background: #fdecc8; color: #b07a1c; }
   .tag-tech   { background: #f1f0ed; color: #50504e; }
-
   tr.hidden { display: none; }
-
-  footer {
-    text-align: center; padding: 24px; color: #787774; font-size: 12px;
-  }
+  footer { text-align: center; padding: 24px; color: #787774; font-size: 12px; }
 </style>
 </head>
 <body>
 <header>
   <h1>🎯 特效技法索引</h1>
-  <div class="stats">共 <span id="total">54</span> 条教程，当前显示 <span id="visible">54</span> 条</div>
-
+  <div class="stats">共 <span id="total">54</span> 条教程，当前显示 <span id="visible">54</span> 条 · 上次同步：2026/4/28 20:47:02</div>
   <div class="filter-row">
     <label>搜索</label>
-    <div class="filter-group">
-      <input id="search" type="text" placeholder="搜索标题 / 标签 / 描述...">
-      <button id="reset">重置筛选</button>
-    </div>
+    <div class="filter-group"><input id="search" type="text" placeholder="搜索标题 / 标签 / 描述..."><button id="reset">重置筛选</button></div>
   </div>
-  <div class="filter-row">
-    <label>作者</label>
-    <div class="filter-group"><button class="filter-btn author" data-author="Adam Hogan">Adam Hogan</button><button class="filter-btn author" data-author="Applied Houdini">Applied Houdini</button><button class="filter-btn author" data-author="Break Your Crayons">Break Your Crayons</button><button class="filter-btn author" data-author="Entagma">Entagma</button><button class="filter-btn author" data-author="Konstantin Magnus">Konstantin Magnus</button><button class="filter-btn author" data-author="NFX">NFX</button><button class="filter-btn author" data-author="RMA FIRE">RMA FIRE</button><button class="filter-btn author" data-author="Sadjad Rabiee">Sadjad Rabiee</button><button class="filter-btn author" data-author="SideFX">SideFX</button><button class="filter-btn author" data-author="VFX Grace">VFX Grace</button></div>
-  </div>
-  <div class="filter-row">
-    <label>模块</label>
-    <div class="filter-group"><button class="filter-btn module" data-module="Copy/For-Each">Copy/For-Each</button><button class="filter-btn module" data-module="DOP">DOP</button><button class="filter-btn module" data-module="DOP/FLIP">DOP/FLIP</button><button class="filter-btn module" data-module="DOP/Pyro">DOP/Pyro</button><button class="filter-btn module" data-module="DOP/Vellum">DOP/Vellum</button><button class="filter-btn module" data-module="DOP/Wire">DOP/Wire</button><button class="filter-btn module" data-module="FLIP">FLIP</button><button class="filter-btn module" data-module="Karma">Karma</button><button class="filter-btn module" data-module="LOP/Solaris">LOP/Solaris</button><button class="filter-btn module" data-module="Mantra">Mantra</button><button class="filter-btn module" data-module="POPs">POPs</button><button class="filter-btn module" data-module="Pyro">Pyro</button><button class="filter-btn module" data-module="RBD">RBD</button><button class="filter-btn module" data-module="Redshift">Redshift</button><button class="filter-btn module" data-module="SOP">SOP</button><button class="filter-btn module" data-module="Solver">Solver</button><button class="filter-btn module" data-module="VEX">VEX</button><button class="filter-btn module" data-module="VOPs">VOPs</button><button class="filter-btn module" data-module="Vellum">Vellum</button><button class="filter-btn module" data-module="Volume">Volume</button><button class="filter-btn module" data-module="访谈">访谈</button></div>
-  </div>
-  <div class="filter-row">
-    <label>效果</label>
-    <div class="filter-group"><button class="filter-btn effect" data-effect="体积渲染">体积渲染</button><button class="filter-btn effect" data-effect="充气效果">充气效果</button><button class="filter-btn effect" data-effect="分形">分形</button><button class="filter-btn effect" data-effect="刚体破碎">刚体破碎</button><button class="filter-btn effect" data-effect="合成">合成</button><button class="filter-btn effect" data-effect="实例化">实例化</button><button class="filter-btn effect" data-effect="布料">布料</button><button class="filter-btn effect" data-effect="教学方法">教学方法</button><button class="filter-btn effect" data-effect="有机结构">有机结构</button><button class="filter-btn effect" data-effect="毛发">毛发</button><button class="filter-btn effect" data-effect="波动">波动</button><button class="filter-btn effect" data-effect="流体">流体</button><button class="filter-btn effect" data-effect="流体可视化">流体可视化</button><button class="filter-btn effect" data-effect="消散">消散</button><button class="filter-btn effect" data-effect="渲染">渲染</button><button class="filter-btn effect" data-effect="火焰">火焰</button><button class="filter-btn effect" data-effect="烟雾">烟雾</button><button class="filter-btn effect" data-effect="爆炸">爆炸</button><button class="filter-btn effect" data-effect="物理动力学">物理动力学</button><button class="filter-btn effect" data-effect="程序化变形">程序化变形</button><button class="filter-btn effect" data-effect="程序化建模">程序化建模</button><button class="filter-btn effect" data-effect="程序化生成">程序化生成</button><button class="filter-btn effect" data-effect="程序化生长">程序化生长</button><button class="filter-btn effect" data-effect="算法可视化">算法可视化</button><button class="filter-btn effect" data-effect="算法实现">算法实现</button><button class="filter-btn effect" data-effect="粒子">粒子</button><button class="filter-btn effect" data-effect="绳索">绳索</button><button class="filter-btn effect" data-effect="角色FX">角色FX</button><button class="filter-btn effect" data-effect="飞溅">飞溅</button></div>
-  </div>
+  <div class="filter-row"><label>作者</label><div class="filter-group"><button class="filter-btn author" data-author="Adam Hogan">Adam Hogan</button><button class="filter-btn author" data-author="Applied Houdini">Applied Houdini</button><button class="filter-btn author" data-author="Break Your Crayons">Break Your Crayons</button><button class="filter-btn author" data-author="Entagma">Entagma</button><button class="filter-btn author" data-author="Konstantin Magnus">Konstantin Magnus</button><button class="filter-btn author" data-author="NFX">NFX</button><button class="filter-btn author" data-author="RMA FIRE">RMA FIRE</button><button class="filter-btn author" data-author="Sadjad Rabiee">Sadjad Rabiee</button><button class="filter-btn author" data-author="SideFX">SideFX</button><button class="filter-btn author" data-author="VFX Grace">VFX Grace</button></div></div>
+  <div class="filter-row"><label>模块</label><div class="filter-group"><button class="filter-btn module" data-module="Copy/For-Each">Copy/For-Each</button><button class="filter-btn module" data-module="DOP">DOP</button><button class="filter-btn module" data-module="DOP/FLIP">DOP/FLIP</button><button class="filter-btn module" data-module="DOP/Pyro">DOP/Pyro</button><button class="filter-btn module" data-module="DOP/Vellum">DOP/Vellum</button><button class="filter-btn module" data-module="DOP/Wire">DOP/Wire</button><button class="filter-btn module" data-module="FLIP">FLIP</button><button class="filter-btn module" data-module="Karma">Karma</button><button class="filter-btn module" data-module="LOP/Solaris">LOP/Solaris</button><button class="filter-btn module" data-module="Mantra">Mantra</button><button class="filter-btn module" data-module="POPs">POPs</button><button class="filter-btn module" data-module="Pyro">Pyro</button><button class="filter-btn module" data-module="RBD">RBD</button><button class="filter-btn module" data-module="Redshift">Redshift</button><button class="filter-btn module" data-module="SOP">SOP</button><button class="filter-btn module" data-module="Solver">Solver</button><button class="filter-btn module" data-module="VEX">VEX</button><button class="filter-btn module" data-module="VOPs">VOPs</button><button class="filter-btn module" data-module="Vellum">Vellum</button><button class="filter-btn module" data-module="Volume">Volume</button><button class="filter-btn module" data-module="访谈">访谈</button></div></div>
+  <div class="filter-row"><label>效果</label><div class="filter-group"><button class="filter-btn effect" data-effect="体积渲染">体积渲染</button><button class="filter-btn effect" data-effect="充气效果">充气效果</button><button class="filter-btn effect" data-effect="分形">分形</button><button class="filter-btn effect" data-effect="刚体破碎">刚体破碎</button><button class="filter-btn effect" data-effect="合成">合成</button><button class="filter-btn effect" data-effect="实例化">实例化</button><button class="filter-btn effect" data-effect="布料">布料</button><button class="filter-btn effect" data-effect="教学方法">教学方法</button><button class="filter-btn effect" data-effect="有机结构">有机结构</button><button class="filter-btn effect" data-effect="毛发">毛发</button><button class="filter-btn effect" data-effect="波动">波动</button><button class="filter-btn effect" data-effect="流体">流体</button><button class="filter-btn effect" data-effect="流体可视化">流体可视化</button><button class="filter-btn effect" data-effect="消散">消散</button><button class="filter-btn effect" data-effect="渲染">渲染</button><button class="filter-btn effect" data-effect="火焰">火焰</button><button class="filter-btn effect" data-effect="烟雾">烟雾</button><button class="filter-btn effect" data-effect="爆炸">爆炸</button><button class="filter-btn effect" data-effect="物理动力学">物理动力学</button><button class="filter-btn effect" data-effect="程序化变形">程序化变形</button><button class="filter-btn effect" data-effect="程序化建模">程序化建模</button><button class="filter-btn effect" data-effect="程序化生成">程序化生成</button><button class="filter-btn effect" data-effect="程序化生长">程序化生长</button><button class="filter-btn effect" data-effect="算法可视化">算法可视化</button><button class="filter-btn effect" data-effect="算法实现">算法实现</button><button class="filter-btn effect" data-effect="粒子">粒子</button><button class="filter-btn effect" data-effect="绳索">绳索</button><button class="filter-btn effect" data-effect="角色FX">角色FX</button><button class="filter-btn effect" data-effect="飞溅">飞溅</button></div></div>
 </header>
-
 <table>
-  <thead>
-    <tr>
-      <th>封面</th>
-      <th>标题 / 简介</th>
-      <th>作者</th>
-      <th>Houdini模块</th>
-      <th>效果类型</th>
-      <th>技术标签</th>
-    </tr>
-  </thead>
+  <thead><tr><th>封面</th><th>标题 / 简介</th><th>作者</th><th>Houdini模块</th><th>效果类型</th><th>技术标签</th></tr></thead>
   <tbody id="tbody">
 <tr data-authors="Entagma" data-modules="SOP|VEX|Copy/For-Each" data-effects="程序化建模|程序化生成" data-text="creating a procedural snowflake 基于六重对称性，用 l-system 或 vex 程序化生成雪花结晶形态。 snowflake l-system symmetry 六重对称 procedural fractal dendritic growth">
   <td class="cover-cell"><a href="https://www.youtube.com/watch?v=n4AQ3yj3L4w" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/n4AQ3yj3L4w/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
@@ -189,7 +94,7 @@
   <td><span class="tag tag-tech">Point Advection</span><span class="tag tag-tech">Hair Shader</span><span class="tag tag-tech">Marschner</span><span class="tag tag-tech">tangent field</span><span class="tag tag-tech">渐变上色</span><span class="tag tag-tech">curve rendering</span></td>
 </tr>
 <tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化生长|有机结构" data-text="kitbash vein growth part1 用 space colonization 算法模拟血管/叶脉生长。 space colonization vein attractor points iterative growth kitbash from scratch">
-  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=BW4JRONkP5o" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/BW4JRONkP5o/hqdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=BW4JRONkP5o" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/BW4JRONkP5o/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
   <td class="title-cell"><a href="https://www.youtube.com/watch?v=BW4JRONkP5o" target="_blank" rel="noopener">Kitbash Vein Growth Part1</a><div class="scene">用 Space Colonization 算法模拟血管/叶脉生长。</div></td>
   <td><span class="tag tag-author">Entagma</span></td>
   <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
@@ -260,9 +165,9 @@
   <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">流体可视化</span></td>
   <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">Rayleigh Taylor</span><span class="tag tag-tech">instability</span><span class="tag tag-tech">turbulence</span><span class="tag tag-tech">fluid simulation</span><span class="tag tag-tech">density difference</span></td>
 </tr>
-<tr data-authors="Entagma" data-modules="SOP|VEX|VOPs" data-effects="程序化生长|有机结构|算法实现" data-text="kitbash vein growth part2 血管生长算法的��阶篇：多根主干、血管直径变化、网格化与优化。 growth solver space colonization vein polywire vdb from scratch kitbash">
+<tr data-authors="Entagma" data-modules="SOP|VEX|VOPs" data-effects="程序化生长|有机结构|算法实现" data-text="kitbash vein growth part2 血管生长算法的���阶篇：多根主干、血管直径变化、网格化与优化。 growth solver space colonization vein polywire vdb from scratch kitbash">
   <td class="cover-cell"><a href="https://www.youtube.com/watch?v=m3s0GgA8YzI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/m3s0GgA8YzI/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
-  <td class="title-cell"><a href="https://www.youtube.com/watch?v=m3s0GgA8YzI" target="_blank" rel="noopener">Kitbash Vein Growth Part2</a><div class="scene">血管生长算法的��阶篇：多根主干、血管直径变化、网格化与优化。</div></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=m3s0GgA8YzI" target="_blank" rel="noopener">Kitbash Vein Growth Part2</a><div class="scene">血管生长算法的���阶篇：多根主干、血管直径变化、网格化与优化。</div></td>
   <td><span class="tag tag-author">Entagma</span></td>
   <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">VOPs</span></td>
   <td><span class="tag tag-effect">程序化生长</span><span class="tag tag-effect">有机结构</span><span class="tag tag-effect">算法实现</span></td>
@@ -590,61 +495,43 @@
 </tr>
   </tbody>
 </table>
-
-<footer>共 54 条 · 数据来自 Notion「特效技法索引」 · 点击封面或标题跳转原视频</footer>
-
+<footer>共 54 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
 <script>
-  const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
-  const rows = Array.from(document.querySelectorAll('#tbody tr'));
-
-  function applyFilters() {
-    let visible = 0;
-    rows.forEach(tr => {
-      const auths = (tr.dataset.authors || '').split('|');
-      const mods  = (tr.dataset.modules || '').split('|');
-      const effs  = (tr.dataset.effects || '').split('|');
-      const text  = tr.dataset.text || '';
-
-      const okAuthor = filters.author.size === 0 || [...filters.author].every(a => auths.includes(a));
-      const okModule = filters.module.size === 0 || [...filters.module].every(m => mods.includes(m));
-      const okEffect = filters.effect.size === 0 || [...filters.effect].every(e => effs.includes(e));
-      const okText   = !filters.text || text.includes(filters.text);
-
-      const show = okAuthor && okModule && okEffect && okText;
-      tr.classList.toggle('hidden', !show);
-      if (show) visible++;
-    });
-    document.getElementById('visible').textContent = visible;
-  }
-
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cls = btn.classList.contains('author') ? 'author'
-                : btn.classList.contains('module') ? 'module'
-                : 'effect';
-      const val = btn.dataset[cls];
-      if (filters[cls].has(val)) {
-        filters[cls].delete(val);
-        btn.classList.remove('active', cls);
-      } else {
-        filters[cls].add(val);
-        btn.classList.add('active', cls);
-      }
-      applyFilters();
-    });
+const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
+const rows = Array.from(document.querySelectorAll('#tbody tr'));
+function applyFilters() {
+  let visible = 0;
+  rows.forEach(tr => {
+    const auths = (tr.dataset.authors || '').split('|');
+    const mods  = (tr.dataset.modules || '').split('|');
+    const effs  = (tr.dataset.effects || '').split('|');
+    const text  = tr.dataset.text || '';
+    const okAuthor = filters.author.size === 0 || [...filters.author].every(a => auths.includes(a));
+    const okModule = filters.module.size === 0 || [...filters.module].every(m => mods.includes(m));
+    const okEffect = filters.effect.size === 0 || [...filters.effect].every(e => effs.includes(e));
+    const okText   = !filters.text || text.includes(filters.text);
+    const show = okAuthor && okModule && okEffect && okText;
+    tr.classList.toggle('hidden', !show);
+    if (show) visible++;
   });
-
-  document.getElementById('search').addEventListener('input', e => {
-    filters.text = e.target.value.trim().toLowerCase();
+  document.getElementById('visible').textContent = visible;
+}
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cls = btn.classList.contains('author') ? 'author' : btn.classList.contains('module') ? 'module' : 'effect';
+    const val = btn.dataset[cls];
+    if (filters[cls].has(val)) { filters[cls].delete(val); btn.classList.remove('active', cls); }
+    else { filters[cls].add(val); btn.classList.add('active', cls); }
     applyFilters();
   });
-
-  document.getElementById('reset').addEventListener('click', () => {
-    filters.author.clear(); filters.module.clear(); filters.effect.clear(); filters.text = '';
-    document.querySelectorAll('.filter-btn.active').forEach(b => b.classList.remove('active', 'author', 'module', 'effect'));
-    document.getElementById('search').value = '';
-    applyFilters();
-  });
+});
+document.getElementById('search').addEventListener('input', e => { filters.text = e.target.value.trim().toLowerCase(); applyFilters(); });
+document.getElementById('reset').addEventListener('click', () => {
+  filters.author.clear(); filters.module.clear(); filters.effect.clear(); filters.text = '';
+  document.querySelectorAll('.filter-btn.active').forEach(b => b.classList.remove('active', 'author', 'module', 'effect'));
+  document.getElementById('search').value = '';
+  applyFilters();
+});
 </script>
 </body>
 </html>
