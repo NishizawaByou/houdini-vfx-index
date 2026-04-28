@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>特效技法索引 · 封面表格</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f7f6f3;
+    color: #37352f;
+    font-size: 14px;
+  }
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff; border-bottom: 1px solid #e3e2de;
+    padding: 16px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  h1 { margin: 0 0 12px; font-size: 22px; }
+  .stats { color: #787774; font-size: 13px; margin-bottom: 12px; }
+  .stats span { color: #37352f; font-weight: 500; }
+  .filter-row {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-top: 8px; flex-wrap: wrap;
+  }
+  .filter-row label {
+    font-size: 12px; color: #787774; padding: 6px 8px 0 0;
+    min-width: 56px; text-align: right;
+  }
+  .filter-group {
+    flex: 1; display: flex; flex-wrap: wrap; gap: 4px;
+    max-width: calc(100% - 64px);
+  }
+  .filter-btn {
+    border: 1px solid #e3e2de; background: #fff; padding: 4px 10px;
+    border-radius: 4px; font-size: 12px; cursor: pointer;
+    color: #37352f; transition: all 0.15s;
+  }
+  .filter-btn:hover { background: #f1f0ed; }
+  .filter-btn.active {
+    background: #2383e2; color: #fff; border-color: #2383e2;
+  }
+  .filter-btn.active.author { background: #d44c47; border-color: #d44c47; }
+  .filter-btn.active.module { background: #0f7b6c; border-color: #0f7b6c; }
+  .filter-btn.active.effect { background: #cb912f; border-color: #cb912f; }
+  #search {
+    width: 280px; padding: 6px 10px; border: 1px solid #e3e2de;
+    border-radius: 4px; font-size: 13px; outline: none;
+  }
+  #search:focus { border-color: #2383e2; }
+  #reset {
+    margin-left: 8px; padding: 6px 14px; border: 1px solid #e3e2de;
+    background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;
+  }
+  #reset:hover { background: #f1f0ed; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    background: #fff;
+  }
+  thead {
+    position: sticky; top: 196px; z-index: 50;
+    background: #f7f6f3;
+  }
+  th {
+    text-align: left; padding: 10px 12px;
+    font-size: 12px; font-weight: 500; color: #787774;
+    border-bottom: 1px solid #e3e2de;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  td {
+    padding: 10px 12px; vertical-align: top;
+    border-bottom: 1px solid #ececea;
+  }
+  tr:hover td { background: #fafaf9; }
+
+  .cover-cell { width: 320px; padding: 8px; }
+  .cover-cell img {
+    width: 100%; height: 180px; object-fit: cover;
+    border-radius: 6px; display: block;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .cover-cell img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .no-cover {
+    width: 100%; height: 180px; background: #ececea;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; color: #999;
+  }
+
+  .title-cell { width: 280px; }
+  .title-cell a {
+    color: #37352f; font-weight: 500; text-decoration: none;
+    line-height: 1.4; display: block;
+  }
+  .title-cell a:hover { color: #2383e2; text-decoration: underline; }
+  .scene { color: #787774; font-size: 12px; margin-top: 6px; line-height: 1.5; }
+
+  .tag {
+    display: inline-block; padding: 2px 6px; margin: 2px 3px 2px 0;
+    border-radius: 3px; font-size: 11px; line-height: 1.4;
+    white-space: nowrap;
+  }
+  .tag-author { background: #fbe5e3; color: #c1352b; font-weight: 500; }
+  .tag-module { background: #ddedea; color: #0f7b6c; }
+  .tag-effect { background: #fdecc8; color: #b07a1c; }
+  .tag-tech   { background: #f1f0ed; color: #50504e; }
+
+  tr.hidden { display: none; }
+
+  footer {
+    text-align: center; padding: 24px; color: #787774; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎯 特效技法索引</h1>
+  <div class="stats">共 <span id="total">54</span> 条教程，当前显示 <span id="visible">54</span> 条</div>
+
+  <div class="filter-row">
+    <label>搜索</label>
+    <div class="filter-group">
+      <input id="search" type="text" placeholder="搜索标题 / 标签 / 描述...">
+      <button id="reset">重置筛选</button>
+    </div>
+  </div>
+  <div class="filter-row">
+    <label>作者</label>
+    <div class="filter-group"><button class="filter-btn author" data-author="Adam Hogan">Adam Hogan</button><button class="filter-btn author" data-author="Applied Houdini">Applied Houdini</button><button class="filter-btn author" data-author="Break Your Crayons">Break Your Crayons</button><button class="filter-btn author" data-author="Entagma">Entagma</button><button class="filter-btn author" data-author="Konstantin Magnus">Konstantin Magnus</button><button class="filter-btn author" data-author="NFX">NFX</button><button class="filter-btn author" data-author="RMA FIRE">RMA FIRE</button><button class="filter-btn author" data-author="Sadjad Rabiee">Sadjad Rabiee</button><button class="filter-btn author" data-author="SideFX">SideFX</button><button class="filter-btn author" data-author="VFX Grace">VFX Grace</button></div>
+  </div>
+  <div class="filter-row">
+    <label>模块</label>
+    <div class="filter-group"><button class="filter-btn module" data-module="Copy/For-Each">Copy/For-Each</button><button class="filter-btn module" data-module="DOP">DOP</button><button class="filter-btn module" data-module="DOP/FLIP">DOP/FLIP</button><button class="filter-btn module" data-module="DOP/Pyro">DOP/Pyro</button><button class="filter-btn module" data-module="DOP/Vellum">DOP/Vellum</button><button class="filter-btn module" data-module="DOP/Wire">DOP/Wire</button><button class="filter-btn module" data-module="FLIP">FLIP</button><button class="filter-btn module" data-module="Karma">Karma</button><button class="filter-btn module" data-module="LOP/Solaris">LOP/Solaris</button><button class="filter-btn module" data-module="Mantra">Mantra</button><button class="filter-btn module" data-module="POPs">POPs</button><button class="filter-btn module" data-module="Pyro">Pyro</button><button class="filter-btn module" data-module="RBD">RBD</button><button class="filter-btn module" data-module="Redshift">Redshift</button><button class="filter-btn module" data-module="SOP">SOP</button><button class="filter-btn module" data-module="Solver">Solver</button><button class="filter-btn module" data-module="VEX">VEX</button><button class="filter-btn module" data-module="VOPs">VOPs</button><button class="filter-btn module" data-module="Vellum">Vellum</button><button class="filter-btn module" data-module="Volume">Volume</button><button class="filter-btn module" data-module="访谈">访谈</button></div>
+  </div>
+  <div class="filter-row">
+    <label>效果</label>
+    <div class="filter-group"><button class="filter-btn effect" data-effect="体积渲染">体积渲染</button><button class="filter-btn effect" data-effect="充气效果">充气效果</button><button class="filter-btn effect" data-effect="分形">分形</button><button class="filter-btn effect" data-effect="刚体破碎">刚体破碎</button><button class="filter-btn effect" data-effect="合成">合成</button><button class="filter-btn effect" data-effect="实例化">实例化</button><button class="filter-btn effect" data-effect="布料">布料</button><button class="filter-btn effect" data-effect="教学方法">教学方法</button><button class="filter-btn effect" data-effect="有机结构">有机结构</button><button class="filter-btn effect" data-effect="毛发">毛发</button><button class="filter-btn effect" data-effect="波动">波动</button><button class="filter-btn effect" data-effect="流体">流体</button><button class="filter-btn effect" data-effect="流体可视化">流体可视化</button><button class="filter-btn effect" data-effect="消散">消散</button><button class="filter-btn effect" data-effect="渲染">渲染</button><button class="filter-btn effect" data-effect="火焰">火焰</button><button class="filter-btn effect" data-effect="烟雾">烟雾</button><button class="filter-btn effect" data-effect="爆炸">爆炸</button><button class="filter-btn effect" data-effect="物理动力学">物理动力学</button><button class="filter-btn effect" data-effect="程序化变形">程序化变形</button><button class="filter-btn effect" data-effect="程序化建模">程序化建模</button><button class="filter-btn effect" data-effect="程序化生成">程序化生成</button><button class="filter-btn effect" data-effect="程序化生长">程序化生长</button><button class="filter-btn effect" data-effect="算法可视化">算法可视化</button><button class="filter-btn effect" data-effect="算法实现">算法实现</button><button class="filter-btn effect" data-effect="粒子">粒子</button><button class="filter-btn effect" data-effect="绳索">绳索</button><button class="filter-btn effect" data-effect="角色FX">角色FX</button><button class="filter-btn effect" data-effect="飞溅">飞溅</button></div>
+  </div>
+</header>
+
+<table>
+  <thead>
+    <tr>
+      <th>封面</th>
+      <th>标题 / 简介</th>
+      <th>作者</th>
+      <th>Houdini模块</th>
+      <th>效果类型</th>
+      <th>技术标签</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+<tr data-authors="Entagma" data-modules="SOP|VEX|Copy/For-Each" data-effects="程序化建模|程序化生成" data-text="creating a procedural snowflake 基于六重对称性，用 l-system 或 vex 程序化生成雪花结晶形态。 snowflake l-system symmetry 六重对称 procedural fractal dendritic growth">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=n4AQ3yj3L4w" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/n4AQ3yj3L4w/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=n4AQ3yj3L4w" target="_blank" rel="noopener">Creating A Procedural Snowflake</a><div class="scene">基于六重对称性，用 L-System 或 VEX 程序化生成雪花结晶形态。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">Copy/For-Each</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">程序化生成</span></td>
+  <td><span class="tag tag-tech">snowflake</span><span class="tag tag-tech">L-System</span><span class="tag tag-tech">symmetry</span><span class="tag tag-tech">六重对称</span><span class="tag tag-tech">procedural</span><span class="tag tag-tech">fractal</span><span class="tag tag-tech">Dendritic growth</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX|Solver" data-effects="程序化生成|算法实现|波动" data-text="refine the ripple solver setup 完善波纹解算器（ripple solver）的设置，实现更真实的波纹传播效果。 ripple solver wave equation laplacian cfl条件 damping from scratch iterative solver">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=mW1gfXxSCwY" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/mW1gfXxSCwY/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=mW1gfXxSCwY" target="_blank" rel="noopener">Refine The Ripple Solver Setup</a><div class="scene">完善波纹解算器（Ripple Solver）的设置，实现更真实的波纹传播效果。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">Solver</span></td>
+  <td><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">算法实现</span><span class="tag tag-effect">波动</span></td>
+  <td><span class="tag tag-tech">Ripple Solver</span><span class="tag tag-tech">wave equation</span><span class="tag tag-tech">Laplacian</span><span class="tag tag-tech">CFL条件</span><span class="tag tag-tech">damping</span><span class="tag tag-tech">from scratch</span><span class="tag tag-tech">iterative solver</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化生成|算法实现" data-text="guest tutorial - vladyslav lavrenov: building a path solver 从零构建路径解算器（path solver），用于程序化生成路径/河流/道路。 path solver dijkstra a* shortest path graph theory 程序化河流 guest tutorial from scratch">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=RM7HJ69l2_c" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/RM7HJ69l2_c/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=RM7HJ69l2_c" target="_blank" rel="noopener">Guest Tutorial - Vladyslav Lavrenov: Building A Path Solver</a><div class="scene">从零构建路径解算器（Path Solver），用于程序化生成路径/河流/道路。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">算法实现</span></td>
+  <td><span class="tag tag-tech">Path Solver</span><span class="tag tag-tech">Dijkstra</span><span class="tag tag-tech">A*</span><span class="tag tag-tech">Shortest Path</span><span class="tag tag-tech">graph theory</span><span class="tag tag-tech">程序化河流</span><span class="tag tag-tech">guest tutorial</span><span class="tag tag-tech">from scratch</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX|Solver|Redshift" data-effects="渲染|程序化生成|毛发" data-text="coloring strands (point advection &amp; hair shading) 用 point advection 给曲线上颜色，并结合 hair shader 渲染。 point advection hair shader marschner tangent field 渐变上色 curve rendering">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=aO1r5yv3QT8" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/aO1r5yv3QT8/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=aO1r5yv3QT8" target="_blank" rel="noopener">Coloring Strands (Point Advection &amp; Hair Shading)</a><div class="scene">用 Point Advection 给曲线上颜色，并结合 Hair Shader 渲染。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">Solver</span><span class="tag tag-module">Redshift</span></td>
+  <td><span class="tag tag-effect">渲染</span><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">毛发</span></td>
+  <td><span class="tag tag-tech">Point Advection</span><span class="tag tag-tech">Hair Shader</span><span class="tag tag-tech">Marschner</span><span class="tag tag-tech">tangent field</span><span class="tag tag-tech">渐变上色</span><span class="tag tag-tech">curve rendering</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化生长|有机结构" data-text="kitbash vein growth part1 用 space colonization 算法模拟血管/叶脉生长。 space colonization vein attractor points iterative growth kitbash from scratch">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=BW4JRONkP5o" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/BW4JRONkP5o/hqdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=BW4JRONkP5o" target="_blank" rel="noopener">Kitbash Vein Growth Part1</a><div class="scene">用 Space Colonization 算法模拟血管/叶脉生长。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化生长</span><span class="tag tag-effect">有机结构</span></td>
+  <td><span class="tag tag-tech">space colonization</span><span class="tag tag-tech">vein</span><span class="tag tag-tech">attractor points</span><span class="tag tag-tech">iterative growth</span><span class="tag tag-tech">kitbash</span><span class="tag tag-tech">from scratch</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化生成|实例化" data-text="diy scatter tool solving problems in houdini 从零实现 scatter 工具，解决原生 scatter 分布不均的问题。 poisson disk 蓝噪声 bridson算法 lloyd迭代 cvt from scratch scatter">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=oeN5KgvWHfs" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/oeN5KgvWHfs/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=oeN5KgvWHfs" target="_blank" rel="noopener">DIY Scatter Tool Solving Problems in Houdini</a><div class="scene">从零实现 Scatter 工具，解决原生 Scatter 分布不均的问题。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">实例化</span></td>
+  <td><span class="tag tag-tech">Poisson Disk</span><span class="tag tag-tech">蓝噪声</span><span class="tag tag-tech">Bridson算法</span><span class="tag tag-tech">Lloyd迭代</span><span class="tag tag-tech">CVT</span><span class="tag tag-tech">from scratch</span><span class="tag tag-tech">scatter</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/Pyro|SOP|Volume" data-effects="烟雾|消散|渲染" data-text="axiom pyro solver: dissolving letters 用 axiom（houdini 的 gpu 加速 pyro 解算器）制作文字 dissolving（溶解/消散）效果。 axiom pyro dissolving gpu solver opencl text effect">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=--UiCZxs5HQ" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/--UiCZxs5HQ/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=--UiCZxs5HQ" target="_blank" rel="noopener">Axiom Pyro Solver: Dissolving Letters</a><div class="scene">用 Axiom（Houdini 的 GPU 加速 Pyro 解算器）制作文字 dissolving（溶解/消散）效果。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/Pyro</span><span class="tag tag-module">SOP</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">消散</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">Axiom</span><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">dissolving</span><span class="tag tag-tech">GPU solver</span><span class="tag tag-tech">OpenCL</span><span class="tag tag-tech">text effect</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/Vellum|SOP|LOP/Solaris" data-effects="布料|渲染|程序化变形" data-text="new in houdini 18.5 pt.3: vellum brush - sculpting &amp; rendering fabric 介绍 houdini 18.5 新功能：vellum brush，实时雕刻布料/软体并解算，以及布料渲染技巧。 houdini 18.5 vellum brush cloth sculpting real-time sim karma redshift">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=jl3EksBh8D0" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/jl3EksBh8D0/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=jl3EksBh8D0" target="_blank" rel="noopener">New in Houdini 18.5 Pt.3: Vellum Brush - Sculpting &amp; Rendering Fabric</a><div class="scene">介绍 Houdini 18.5 新功能：Vellum Brush，实时雕刻布料/软体并解算，以及布料渲染技巧。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/Vellum</span><span class="tag tag-module">SOP</span><span class="tag tag-module">LOP/Solaris</span></td>
+  <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">渲染</span><span class="tag tag-effect">程序化变形</span></td>
+  <td><span class="tag tag-tech">Houdini 18.5</span><span class="tag tag-tech">Vellum Brush</span><span class="tag tag-tech">cloth sculpting</span><span class="tag tag-tech">real-time sim</span><span class="tag tag-tech">Karma</span><span class="tag tag-tech">Redshift</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="实例化|程序化生成|程序化变形" data-text="new in houdini 18.5 pt.5: scatter &amp; align plus attribute from pieces sops 介绍 houdini 18.5 新功能：scatter and align sop 和 attribute from pieces sop 的工作流。 houdini 18.5 scatter and align attribute from pieces new workflow instancing">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=tCijuuNIRrs" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/tCijuuNIRrs/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=tCijuuNIRrs" target="_blank" rel="noopener">New in Houdini 18.5 Pt.5: Scatter &amp; Align Plus Attribute From Pieces SOPs</a><div class="scene">介绍 Houdini 18.5 新功能：Scatter and Align SOP 和 Attribute From Pieces SOP 的工作流。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">实例化</span><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">程序化变形</span></td>
+  <td><span class="tag tag-tech">Houdini 18.5</span><span class="tag tag-tech">Scatter and Align</span><span class="tag tag-tech">Attribute From Pieces</span><span class="tag tag-tech">new workflow</span><span class="tag tag-tech">instancing</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/Vellum|SOP" data-effects="布料|程序化变形|充气效果" data-text="simulating fabric hoses in vellum (or: how to rip off your c4d friends) 用 vellum 模拟布管（充气软管）效果，调侃 c4d 用户也能轻松实现。 vellum cloth inflated hose pressure soft body c4d">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=Ss9dxRzCqWc" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/Ss9dxRzCqWc/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=Ss9dxRzCqWc" target="_blank" rel="noopener">Simulating Fabric Hoses In Vellum (Or: How To Rip Off Your C4D Friends)</a><div class="scene">用 Vellum 模拟布管（充气软管）效果，调侃 C4D 用户也能轻松实现。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/Vellum</span><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">程序化变形</span><span class="tag tag-effect">充气效果</span></td>
+  <td><span class="tag tag-tech">Vellum</span><span class="tag tag-tech">cloth</span><span class="tag tag-tech">inflated hose</span><span class="tag tag-tech">pressure</span><span class="tag tag-tech">soft body</span><span class="tag tag-tech">C4D</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/FLIP|SOP|VOPs" data-effects="流体|渲染|程序化变形" data-text="guest tutorial: meshing small scale flip sims 客人教程：小规模 flip 模拟的网格化技术，解决小尺度流体的表面重建质量问题。 flip meshing small scale surface reconstruction particle fluid surface guest tutorial">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=HcBxUj4yGQ4" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/HcBxUj4yGQ4/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=HcBxUj4yGQ4" target="_blank" rel="noopener">Guest Tutorial: Meshing Small Scale Flip Sims</a><div class="scene">客人教程：小规模 FLIP 模拟的网格化技术，解决小尺度流体的表面重建质量问题。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/FLIP</span><span class="tag tag-module">SOP</span><span class="tag tag-module">VOPs</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">渲染</span><span class="tag tag-effect">程序化变形</span></td>
+  <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">meshing</span><span class="tag tag-tech">small scale</span><span class="tag tag-tech">surface reconstruction</span><span class="tag tag-tech">particle fluid surface</span><span class="tag tag-tech">guest tutorial</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/FLIP|SOP" data-effects="流体|飞溅|粒子" data-text="quicktip: fluid splashes using flip 用 flip 流体模拟飞溅效果：物体入水、液体碰撞产生的水花与飞溅。 flip splash fluid simulation particle advection whitewater">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=_6SQPc961ZE" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/_6SQPc961ZE/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=_6SQPc961ZE" target="_blank" rel="noopener">Quicktip: Fluid Splashes Using FLIP</a><div class="scene">用 FLIP 流体模拟飞溅效果：物体入水、液体碰撞产生的水花与飞溅。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/FLIP</span><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">飞溅</span><span class="tag tag-effect">粒子</span></td>
+  <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">splash</span><span class="tag tag-tech">fluid simulation</span><span class="tag tag-tech">Particle Advection</span><span class="tag tag-tech">whitewater</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="DOP/FLIP|SOP|Pyro" data-effects="流体|烟雾|流体可视化" data-text="quicktip: rayleigh taylor instability using flip 用 flip 流体模拟 rayleigh-taylor 不稳定性：高密度流体在上、低密度流体在下时的湍流混合。 flip rayleigh taylor instability turbulence fluid simulation density difference">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=4z9HLAvEV10" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/4z9HLAvEV10/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=4z9HLAvEV10" target="_blank" rel="noopener">Quicktip: Rayleigh Taylor Instability Using FLIP</a><div class="scene">用 FLIP 流体模拟 Rayleigh-Taylor 不稳定性：高密度流体在上、低密度流体在下时的湍流混合。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">DOP/FLIP</span><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">流体可视化</span></td>
+  <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">Rayleigh Taylor</span><span class="tag tag-tech">instability</span><span class="tag tag-tech">turbulence</span><span class="tag tag-tech">fluid simulation</span><span class="tag tag-tech">density difference</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX|VOPs" data-effects="程序化生长|有机结构|算法实现" data-text="kitbash vein growth part2 血管生长算法的��阶篇：多根主干、血管直径变化、网格化与优化。 growth solver space colonization vein polywire vdb from scratch kitbash">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=m3s0GgA8YzI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/m3s0GgA8YzI/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=m3s0GgA8YzI" target="_blank" rel="noopener">Kitbash Vein Growth Part2</a><div class="scene">血管生长算法的��阶篇：多根主干、血管直径变化、网格化与优化。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">VOPs</span></td>
+  <td><span class="tag tag-effect">程序化生长</span><span class="tag tag-effect">有机结构</span><span class="tag tag-effect">算法实现</span></td>
+  <td><span class="tag tag-tech">growth solver</span><span class="tag tag-tech">space colonization</span><span class="tag tag-tech">vein</span><span class="tag tag-tech">PolyWire</span><span class="tag tag-tech">VDB</span><span class="tag tag-tech">from scratch</span><span class="tag tag-tech">kitbash</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化建模|算法可视化" data-text="easy minimal surfaces using pbds grains 用 pbd grains 解算最小曲面（肥皂膜）形态，程序化生成有机表面。 pbd position based dynamics minimal surface soap film grains 从零实现">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=rMfVjQGCy24" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/rMfVjQGCy24/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=rMfVjQGCy24" target="_blank" rel="noopener">Easy Minimal Surfaces Using PBDs Grains</a><div class="scene">用 PBD Grains 解算最小曲面（肥皂膜）形态，程序化生成有机表面。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">算法可视化</span></td>
+  <td><span class="tag tag-tech">PBD</span><span class="tag tag-tech">Position Based Dynamics</span><span class="tag tag-tech">minimal surface</span><span class="tag tag-tech">soap film</span><span class="tag tag-tech">Grains</span><span class="tag tag-tech">从零实现</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="Volume|VEX|LOP/Solaris|Mantra" data-effects="分形|体积渲染" data-text="entagma - preview: premium course pt.19 - juliabulb using volume procedurals 付费课程 preview 片段：用 houdini volume procedural 实时渲染 4d juliabulb 分形（3d mandelbulb 的 julia set 版本），不用预 mesh，渲染时按需采样 sdf。 juliabulb mandelbulb volume procedural sdf 分形渲染 mantra">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=LmPmgKkWs9E" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/LmPmgKkWs9E/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=LmPmgKkWs9E" target="_blank" rel="noopener">Entagma - Preview: Premium Course pt.19 - Juliabulb Using Volume Procedurals</a><div class="scene">付费课程 Preview 片段：用 Houdini Volume Procedural 实时渲染 4D Juliabulb 分形（3D Mandelbulb 的 Julia set 版本），不用预 mesh，渲染时按需采样 SDF。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">Volume</span><span class="tag tag-module">VEX</span><span class="tag tag-module">LOP/Solaris</span><span class="tag tag-module">Mantra</span></td>
+  <td><span class="tag tag-effect">分形</span><span class="tag tag-effect">体积渲染</span></td>
+  <td><span class="tag tag-tech">Juliabulb</span><span class="tag tag-tech">Mandelbulb</span><span class="tag tag-tech">Volume Procedural</span><span class="tag tag-tech">SDF</span><span class="tag tag-tech">分形渲染</span><span class="tag tag-tech">Mantra</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="POPs|SOP|VEX|Volume" data-effects="程序化生长|有机结构" data-text="entagma - fmx special: a point based growth solver fmx 大会演讲题材：在点云上跑生长算法，每帧选满足条件的点 spawn 新点，模拟珊瑚/血管/植物根系的有机生长。配套 sdf 限制生长空间 + age 控半径。 growth solver space colonization sdf边界 age属性 点云生长 fmx">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=P8FI008FJXM" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/P8FI008FJXM/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=P8FI008FJXM" target="_blank" rel="noopener">Entagma - FMX Special: A Point Based Growth Solver</a><div class="scene">FMX 大会演讲题材：在点云上跑生长算法，每帧选满足条件的点 spawn 新点，模拟珊瑚/血管/植物根系的有机生长。配套 SDF 限制生长空间 + age 控半径。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">POPs</span><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">程序化生长</span><span class="tag tag-effect">有机结构</span></td>
+  <td><span class="tag tag-tech">growth solver</span><span class="tag tag-tech">space colonization</span><span class="tag tag-tech">SDF边界</span><span class="tag tag-tech">age属性</span><span class="tag tag-tech">点云生长</span><span class="tag tag-tech">FMX</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX|DOP" data-effects="布料|算法实现" data-text="entagma - implementing a position based cloth solver from scratch 从零写一个 position based dynamics 布料解算器：拉伸约束 + 弯曲约束 + 重力 + iterative projection。真正搞懂 vellum/pbd 是怎么做的，而不是当黑盒用。 pbd position based dynamics 拉伸约束 弯曲约束 iterative solver from scratch">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=ebVRaLiNt34" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/ebVRaLiNt34/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=ebVRaLiNt34" target="_blank" rel="noopener">Entagma - Implementing A Position Based Cloth Solver From Scratch</a><div class="scene">从零写一个 Position Based Dynamics 布料解算器：拉伸约束 + 弯曲约束 + 重力 + iterative projection。真正搞懂 Vellum/PBD 是怎么做的，而不是当黑盒用。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span><span class="tag tag-module">DOP</span></td>
+  <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">算法实现</span></td>
+  <td><span class="tag tag-tech">PBD</span><span class="tag tag-tech">Position Based Dynamics</span><span class="tag tag-tech">拉伸约束</span><span class="tag tag-tech">弯曲约束</span><span class="tag tag-tech">iterative solver</span><span class="tag tag-tech">from scratch</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|DOP/Wire" data-effects="绳索|物理动力学" data-text="entagma - create and simulate a procedural rope 用 wire solver 做一根程序化绳子：spine 曲线 sweep 几何 + wire constraint 模拟。重点是 wire 的 stiffness/damping 调参 + 起末端的 pin 约束 + 受力时的真实摆动。 wire solver rope sim spine sweep stiffness damping pin constraint">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=g6S3CXJgC5g" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/g6S3CXJgC5g/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=g6S3CXJgC5g" target="_blank" rel="noopener">Entagma - Create and Simulate a Procedural Rope</a><div class="scene">用 Wire Solver 做一根程序化绳子：spine 曲线 sweep 几何 + wire constraint 模拟。重点是 wire 的 stiffness/damping 调参 + 起末端的 pin 约束 + 受力时的真实摆动。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">DOP/Wire</span></td>
+  <td><span class="tag tag-effect">绳索</span><span class="tag tag-effect">物理动力学</span></td>
+  <td><span class="tag tag-tech">Wire Solver</span><span class="tag tag-tech">rope sim</span><span class="tag tag-tech">spine sweep</span><span class="tag tag-tech">stiffness damping</span><span class="tag tag-tech">pin constraint</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="POPs|SOP|Redshift|LOP/Solaris" data-effects="实例化|流体可视化" data-text="entagma - quicktip: instancing in redshift (bonus: particle advection) redshift 实例渲染快速食谱：用 instance 节点 + redshift object properties 把几百万小物体丢到粒子上，零渲染成本。彩蛋：用 volume 速度场推动粒子做 advection 流场。 redshift instance particle advection volume velocity rs proxy">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=6LdKSBv6Rp0" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/6LdKSBv6Rp0/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=6LdKSBv6Rp0" target="_blank" rel="noopener">Entagma - Quicktip: Instancing In Redshift (Bonus: Particle Advection)</a><div class="scene">Redshift 实例渲染快速食谱：用 instance 节点 + Redshift Object Properties 把几百万小物体丢到粒子上，零渲染成本。彩蛋：用 volume 速度场推动粒子做 advection 流场。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">POPs</span><span class="tag tag-module">SOP</span><span class="tag tag-module">Redshift</span><span class="tag tag-module">LOP/Solaris</span></td>
+  <td><span class="tag tag-effect">实例化</span><span class="tag tag-effect">流体可视化</span></td>
+  <td><span class="tag tag-tech">Redshift instance</span><span class="tag tag-tech">Particle Advection</span><span class="tag tag-tech">volume velocity</span><span class="tag tag-tech">rs proxy</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|VEX" data-effects="程序化变形|教学方法" data-text="entagma - built in nodes vs. vex: voronoi morph 用同一个 voronoi morph 效果对比&quot;内置节点&quot;和&quot;vex 手写&quot;两种实现，展示 entagma 教学核心理念：先内置节点搭 prototype，再 vex 复刻拿到性能与可控性。 voronoi vex重写 prototype-vs-production 点云查找">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=hX3hbm7gkm0" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/hX3hbm7gkm0/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=hX3hbm7gkm0" target="_blank" rel="noopener">Entagma - Built In Nodes vs. VEX: Voronoi Morph</a><div class="scene">用同一个 voronoi morph 效果对比&quot;内置节点&quot;和&quot;VEX 手写&quot;两种实现，展示 Entagma 教学核心理念：先内置节点搭 prototype，再 VEX 复刻拿到性能与可控性。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化变形</span><span class="tag tag-effect">教学方法</span></td>
+  <td><span class="tag tag-tech">Voronoi</span><span class="tag tag-tech">VEX重写</span><span class="tag tag-tech">prototype-vs-production</span><span class="tag tag-tech">点云查找</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="POPs|SOP|VEX" data-effects="程序化生成|算法可视化" data-text="entagma - grid particle systems: physarum slime mold pt ii - 2d setup 用 houdini grid 上的 pop 模拟 physarum 黏菌觅食算法（pt ii）：每个 agent 三个传感器（左/中/右）采样 trail 浓度场决定转向，留下信息素扩散+衰减。生成有机网状结构，自然类比毛细血管/城市路网。 physarum 黏菌算法 agent-based 信息素场 volume sampling">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=b6lH60OCKzw" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/b6lH60OCKzw/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=b6lH60OCKzw" target="_blank" rel="noopener">Entagma - Grid Particle Systems: Physarum Slime Mold Pt II - 2D Setup</a><div class="scene">用 Houdini Grid 上的 POP 模拟 Physarum 黏菌觅食算法（Pt II）：每个 agent 三个传感器（左/中/右）采样 trail 浓度场决定转向，留下信息素扩散+衰减。生成有机网状结构，自然类比毛细血管/城市路网。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">POPs</span><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化生成</span><span class="tag tag-effect">算法可视化</span></td>
+  <td><span class="tag tag-tech">Physarum</span><span class="tag tag-tech">黏菌算法</span><span class="tag tag-tech">agent-based</span><span class="tag tag-tech">信息素场</span><span class="tag tag-tech">volume sampling</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="渲染|程序化建模" data-text="entagma - a bit of vex: caustics generator pt.2 - extended features vex 焦散光纹生成器 part 2：用 refract + intersect 在 sop 端纯数学构造光纹（比渲染器算快 100x）；扩展支持 color dispersion / 任意光向 / 输出贴图。 vex caustics refract intersect photon mapping sop端渲染 snell定律">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=QFsJikUBS6g" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/QFsJikUBS6g/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=QFsJikUBS6g" target="_blank" rel="noopener">Entagma - A Bit Of VEX: Caustics Generator pt.2 - Extended Features</a><div class="scene">VEX 焦散光纹生成器 Part 2：用 refract + intersect 在 SOP 端纯数学构造光纹（比渲染器算快 100x）；扩展支持 color dispersion / 任意光向 / 输出贴图。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">渲染</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">VEX</span><span class="tag tag-tech">caustics</span><span class="tag tag-tech">refract</span><span class="tag tag-tech">intersect</span><span class="tag tag-tech">photon mapping</span><span class="tag tag-tech">SOP端渲染</span><span class="tag tag-tech">Snell定律</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="程序化建模" data-text="entagma - guest tutorial: jeroen claus - origami bunny 客座讲师 jeroen claus（phospho.io 医学可视化）演示 houdini 程序化折纸兔子：折痕表 + solver 累积应用 polyfold + reverse fold 实现内折。和 polyfolding 系列互补。 origami 程序化折纸 jeroen claus guest tutorial medical visualization crease pattern">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=4Aud2f6fNRg" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/4Aud2f6fNRg/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=4Aud2f6fNRg" target="_blank" rel="noopener">Entagma - Guest Tutorial: Jeroen Claus - Origami Bunny</a><div class="scene">客座讲师 Jeroen Claus（Phospho.io 医学可视化）演示 Houdini 程序化折纸兔子：折痕表 + Solver 累积应用 polyfold + reverse fold 实现内折。和 Polyfolding 系列互补。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">Origami</span><span class="tag tag-tech">程序化折纸</span><span class="tag tag-tech">Jeroen Claus</span><span class="tag tag-tech">guest tutorial</span><span class="tag tag-tech">medical visualization</span><span class="tag tag-tech">crease pattern</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="访谈|SOP" data-effects="程序化建模" data-text="entagma - nerd rant 2.0 ep.14: learning houdini with vincent schwenk pt.2 entagma 访谈节目 ep.14：manuel 和独立艺术家 vincent schwenk 聊学 houdini 的路径、独立 vs 公司工作流、houdini 节点偏好等话题。非技术教程。 nerd rant vincent schwenk 艺术家访谈 学习方法 houdini入门">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=PiBZ10Sucrw" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/PiBZ10Sucrw/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=PiBZ10Sucrw" target="_blank" rel="noopener">Entagma - Nerd Rant 2.0 Ep.14: Learning Houdini With Vincent Schwenk pt.2</a><div class="scene">Entagma 访谈节目 Ep.14：Manuel 和独立艺术家 Vincent Schwenk 聊学 Houdini 的路径、独立 vs 公司工作流、Houdini 节点偏好等话题。非技术教程。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">访谈</span><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">Nerd Rant</span><span class="tag tag-tech">Vincent Schwenk</span><span class="tag tag-tech">艺术家访谈</span><span class="tag tag-tech">学习方法</span><span class="tag tag-tech">Houdini入门</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="程序化建模" data-text="entagma - polyfolding (part 1) 程序化折纸算法 part 1：沿任意折痕切 mesh + 把动侧绕折痕轴旋转。封装 hda 为后续多次折叠链铺路。boolean surface only + qrotate 是核心。 polyfolding 折纸算法 crease rotate around axis hda封装 mesh拆分">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=31wVHysVQqs" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/31wVHysVQqs/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=31wVHysVQqs" target="_blank" rel="noopener">Entagma - Polyfolding (Part 1)</a><div class="scene">程序化折纸算法 Part 1：沿任意折痕切 mesh + 把动侧绕折痕轴旋转。封装 HDA 为后续多次折叠链铺路。Boolean Surface Only + qrotate 是核心。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">polyfolding</span><span class="tag tag-tech">折纸算法</span><span class="tag tag-tech">crease</span><span class="tag tag-tech">rotate around axis</span><span class="tag tag-tech">HDA封装</span><span class="tag tag-tech">mesh拆分</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Volume" data-effects="程序化建模|流体" data-text="entagma - analytical foam 解析泡沫：用 sdf + voronoi 数学纯程序化生成&quot;挤压在一起的气泡团&quot;，不需要 flip/whitewater 模拟。entagma 数学美学派代表作。 vdb融合">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=t0grBIgoHcI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/t0grBIgoHcI/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=t0grBIgoHcI" target="_blank" rel="noopener">Entagma - Analytical Foam</a><div class="scene">解析泡沫：用 SDF + Voronoi 数学纯程序化生成&quot;挤压在一起的气泡团&quot;，不需要 FLIP/Whitewater 模拟。Entagma 数学美学派代表作。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">流体</span></td>
+  <td><span class="tag tag-tech">VDB融合</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Pyro|Volume" data-effects="烟雾|流体" data-text="entagma - simple wind tunnel 最小化风洞 setup：入风口 vel 场 + collider + pyro 只解算 vel（不要 density/temperature）。一次 cache 多次复用——粒子绕障/旗帜风/落叶飞舞通用底层。 pyro vop速度场">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=69ITvEs0q8U" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/69ITvEs0q8U/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=69ITvEs0q8U" target="_blank" rel="noopener">Entagma - Simple Wind Tunnel</a><div class="scene">最小化风洞 setup：入风口 vel 场 + collider + Pyro 只解算 vel（不要 density/temperature）。一次 cache 多次复用——粒子绕障/旗帜风/落叶飞舞通用底层。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">流体</span></td>
+  <td><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">VOP速度场</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Vellum" data-effects="布料|程序化建模" data-text="entagma - yarnworks: wire solver and constraint networks in dops wire solver + constraint network 模拟毛线绳缆：比 vellum hair 更可控，五类型 constraint 实现绳结/缠绕/断裂等拓扑级行为。 vellum 样条引导">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=rhOHvo2pjCI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/rhOHvo2pjCI/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=rhOHvo2pjCI" target="_blank" rel="noopener">Entagma - Yarnworks: Wire Solver and Constraint Networks in DOPs</a><div class="scene">Wire Solver + Constraint Network 模拟毛线绳缆：比 Vellum hair 更可控，五类型 constraint 实现绳结/缠绕/断裂等拓扑级行为。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Vellum</span></td>
+  <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">Vellum</span><span class="tag tag-tech">样条引导</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="角色FX|程序化建模" data-text="entagma - new in houdini 18.5 pt.8: kinefx houdini 18.5 引入 kinefx：把骨骼/蒙皮/动画从对象级搬到 sop 全程序化，joint 变成 point，约束变成节点。彻底改变 houdini 角色动画工作流。 kinefx">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=BJ1nzo3AuGU" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/BJ1nzo3AuGU/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=BJ1nzo3AuGU" target="_blank" rel="noopener">Entagma - New in Houdini 18.5 Pt.8: KineFX</a><div class="scene">Houdini 18.5 引入 KineFX：把骨骼/蒙皮/动画从对象级搬到 SOP 全程序化，joint 变成 point，约束变成节点。彻底改变 Houdini 角色动画工作流。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">角色FX</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">kinefx</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="程序化建模" data-text="entagma - essential td skills: designing &amp; implementing algorithms td 思维元教程：manuel 演示&quot;看到效果 → 拆解算法 → 映射 houdini → 迭代验证&quot;四步法。看一遍胜过 50 个技巧课，是 entagma 哲学的浓缩。 td思维 算法设计 algorithm decomposition 元教程 iterate-validate">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=YiAtM4EpQ4U" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/YiAtM4EpQ4U/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=YiAtM4EpQ4U" target="_blank" rel="noopener">Entagma - Essential TD Skills: Designing &amp; Implementing Algorithms</a><div class="scene">TD 思维元教程：Manuel 演示&quot;看到效果 → 拆解算法 → 映射 Houdini → 迭代验证&quot;四步法。看一遍胜过 50 个技巧课，是 Entagma 哲学的浓缩。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">TD思维</span><span class="tag tag-tech">算法设计</span><span class="tag tag-tech">algorithm decomposition</span><span class="tag tag-tech">元教程</span><span class="tag tag-tech">iterate-validate</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP" data-effects="程序化建模|布料" data-text="entagma - knitting in 3d: building a uv deformer 程序化针织：在 uv 平面建针织环网格，用 uvsample vex 把每个环 transform 到 3d 物体表面。uv deformer 思路通吃锁子甲/龙鳞/砖墙等&quot;重复花纹覆盖曲面&quot;场景。 实例化 样条引导">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=C9VBY9Wbbrw" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/C9VBY9Wbbrw/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=C9VBY9Wbbrw" target="_blank" rel="noopener">Entagma - Knitting in 3d: Building a UV Deformer</a><div class="scene">程序化针织：在 UV 平面建针织环网格，用 uvsample VEX 把每个环 transform 到 3D 物体表面。UV deformer 思路通吃锁子甲/龙鳞/砖墙等&quot;重复花纹覆盖曲面&quot;场景。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">布料</span></td>
+  <td><span class="tag tag-tech">实例化</span><span class="tag tag-tech">样条引导</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Volume" data-effects="程序化建模|流体|渲染" data-text="entagma - procedural modeling of water droplets 程序化建水珠：scatter + metaball + vdb 融合 + ray 贴表面 + 法线鼓起 → 任意表面无需 flip 即可生成水珠 mesh。 ray吸附 vdb融合">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=0GAFEyvVC4g" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/0GAFEyvVC4g/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=0GAFEyvVC4g" target="_blank" rel="noopener">Entagma - Procedural Modeling Of Water Droplets</a><div class="scene">程序化建水珠：scatter + metaball + VDB 融合 + Ray 贴表面 + 法线鼓起 → 任意表面无需 FLIP 即可生成水珠 mesh。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">流体</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">Ray吸附</span><span class="tag tag-tech">VDB融合</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Pyro|Volume" data-effects="烟雾|渲染" data-text="entagma - houdini 17 quicktip: colored smoke 5 分钟 quicktip：pyro solver 加 cd 自定义体素场让烟雾带颜色。color dust explosion 课的精简前置版。 pyro">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=RemcySTz6eo" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/RemcySTz6eo/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=RemcySTz6eo" target="_blank" rel="noopener">Entagma - Houdini 17 Quicktip: Colored Smoke</a><div class="scene">5 分钟 Quicktip：Pyro Solver 加 Cd 自定义体素场让烟雾带颜色。Color Dust Explosion 课的精简前置版。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">Pyro</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|Vellum" data-effects="布料|程序化建模" data-text="entagma - tying &amp; untying a ribbon knot using vellum vellum 丝带打结/解结：用样条 + polyframe 把直线 mesh 变形成已打结状态，再用 vellum target position 关键帧切换让它&quot;自己解开&quot;。 vellum 样条引导">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=wNHe58KlwxI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/wNHe58KlwxI/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=wNHe58KlwxI" target="_blank" rel="noopener">Entagma - Tying &amp; Untying A Ribbon Knot Using Vellum</a><div class="scene">Vellum 丝带打结/解结：用样条 + Polyframe 把直线 mesh 变形成已打结状态，再用 Vellum target position 关键帧切换让它&quot;自己解开&quot;。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Vellum</span></td>
+  <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">Vellum</span><span class="tag tag-tech">样条引导</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|POPs|Pyro|Volume|Karma" data-effects="烟雾|爆炸|粒子|渲染" data-text="entagma - production setup walkthrough: color dust explosion holi 节色粉爆炸的生产级 setup：pyro 自定义 cd 体素场和 density 同步对流 → 自然色粉混合；附加 pop 粒子层做颗粒细节 + production walkthrough 流程化思维。 pyro pop粒子">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=d2TuN3Cx1wk" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/d2TuN3Cx1wk/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=d2TuN3Cx1wk" target="_blank" rel="noopener">Entagma - Production Setup Walkthrough: Color Dust Explosion</a><div class="scene">Holi 节色粉爆炸的生产级 setup：Pyro 自定义 Cd 体素场和 density 同步对流 → 自然色粉混合；附加 POP 粒子层做颗粒细节 + production walkthrough 流程化思维。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">爆炸</span><span class="tag tag-effect">粒子</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">POP粒子</span></td>
+</tr>
+<tr data-authors="Entagma" data-modules="SOP|POPs|FLIP" data-effects="流体|程序化建模" data-text="entagma - mograph liquids: controlling flip fluids via curve forces 用样条曲线引导 flip 流体走向：tangent + attraction 两个分量构造 curve force，做 mograph 风格&quot;可控设计感液体&quot;（液体绕 logo / 糖浆广告）。 flip 样条引导 vop速度场">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=DhqC13Z_hYc" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/DhqC13Z_hYc/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=DhqC13Z_hYc" target="_blank" rel="noopener">Entagma - Mograph Liquids: Controlling FLIP Fluids Via Curve Forces</a><div class="scene">用样条曲线引导 FLIP 流体走向：tangent + attraction 两个分量构造 curve force，做 Mograph 风格&quot;可控设计感液体&quot;（液体绕 logo / 糖浆广告）。</div></td>
+  <td><span class="tag tag-author">Entagma</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">FLIP</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">样条引导</span><span class="tag tag-tech">VOP速度场</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|RBD" data-effects="刚体破碎" data-text="applied houdini rigids i - introduction to rigid body simulation（steven knipping） bullet solver 入门系统课：讲透 rbd object / 碰撞代理几何 / 物理属性 / constraint 网络（glue/hard/hinge/slider/spring）/ substeps 调参，是后面 rigids ii 破碎的地基。 实例化">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1N4411R7mN/" target="_blank" rel="noopener"><img src="https://i0.hdslb.com/bfs/archive/6559ff36bcb9bf73a67577af7d0601ba0dbd96ba.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1N4411R7mN/" target="_blank" rel="noopener">Applied Houdini Rigids I - Introduction to Rigid Body Simulation（Steven Knipping）</a><div class="scene">Bullet Solver 入门系统课：讲透 RBD Object / 碰撞代理几何 / 物理属性 / Constraint 网络（Glue/Hard/Hinge/Slider/Spring）/ Substeps 调参，是后面 Rigids II 破碎的地基。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">RBD</span></td>
+  <td><span class="tag tag-effect">刚体破碎</span></td>
+  <td><span class="tag tag-tech">实例化</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|FLIP|Volume|Karma" data-effects="流体|渲染" data-text="applied houdini liquids iii - oceans（steven knipping） 海洋三层结构系统课：远场 ocean spectrum 程序化无限海面 + 近场 flip/wave tank 船周围浪 + whitewater foam 泡沫层；含遮罩混合与 tile 实例化。 flip 实例化">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV14z4y1X7xJ/" target="_blank" rel="noopener"><img src="https://i1.hdslb.com/bfs/archive/c58699085715c2268a49d48ce3f4bb84450388fd.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV14z4y1X7xJ/" target="_blank" rel="noopener">Applied Houdini Liquids III - Oceans（Steven Knipping）</a><div class="scene">海洋三层结构系统课：远场 Ocean Spectrum 程序化无限海面 + 近场 FLIP/Wave Tank 船周围浪 + Whitewater Foam 泡沫层；含遮罩混合与 tile 实例化。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">FLIP</span><span class="tag tag-module">Volume</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">FLIP</span><span class="tag tag-tech">实例化</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|Pyro|Volume" data-effects="烟雾|爆炸|火焰" data-text="applied houdini volumes ii - simulation（steven knipping） pyro 烟雾模拟系统课：从 solver 底层物理（buoyancy / turbulence / dissipation）到 source 设计、低分辨率定型 + upres 升细节的完整生产工作流。 pyro">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1T4411R7Mu/" target="_blank" rel="noopener"><img src="https://i1.hdslb.com/bfs/archive/0a838d6c790f7581e29fd1c5f0442908ee8702db.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1T4411R7Mu/" target="_blank" rel="noopener">Applied Houdini Volumes II - Simulation（Steven Knipping）</a><div class="scene">Pyro 烟雾模拟系统课：从 Solver 底层物理（buoyancy / turbulence / dissipation）到 source 设计、低分辨率定型 + upres 升细节的完整生产工作流。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">爆炸</span><span class="tag tag-effect">火焰</span></td>
+  <td><span class="tag tag-tech">Pyro</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|POPs|Karma" data-effects="粒子|程序化建模" data-text="applied houdini particles iv - physical instances（steven knipping） 粒子 + 物理实例化系统课：花瓣/碎片用 packed instance 挂在粒子骨架上，含生长、自定义碰撞、属性分布、几何光与半透明渲染。 pop粒子 实例化 几何转粒子">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV15mS7YBEHo/" target="_blank" rel="noopener"><img src="https://i2.hdslb.com/bfs/archive/2813311fea4515a6c49adcb354ed5265849023ed.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV15mS7YBEHo/" target="_blank" rel="noopener">Applied Houdini Particles IV - Physical Instances（Steven Knipping）</a><div class="scene">粒子 + 物理实例化系统课：花瓣/碎片用 packed instance 挂在粒子骨架上，含生长、自定义碰撞、属性分布、几何光与半透明渲染。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">实例化</span><span class="tag tag-tech">几何转粒子</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|Pyro|Volume" data-effects="粒子|消散|烟雾" data-text="applied houdini volumes vi — controlling magic（steven knipping） 体积魔法特效系统课：程序化生成 volume + fake sim（不跑 sim 的 advect）+ 自定义漩涡速度场 + 温度驱动发光 + 合成出效果。 pyro vop速度场 vdb融合">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1yA411W7ei/" target="_blank" rel="noopener"><img src="https://i1.hdslb.com/bfs/archive/6e65db24d40bfdf13a5d90cafb722f78fd5c9e38.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1yA411W7ei/" target="_blank" rel="noopener">Applied Houdini Volumes VI — Controlling Magic（Steven Knipping）</a><div class="scene">体积魔法特效系统课：程序化生成 volume + Fake sim（不跑 sim 的 advect）+ 自定义漩涡速度场 + 温度驱动发光 + 合成出效果。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">消散</span><span class="tag tag-effect">烟雾</span></td>
+  <td><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">VOP速度场</span><span class="tag tag-tech">VDB融合</span></td>
+</tr>
+<tr data-authors="Applied Houdini" data-modules="SOP|POPs|Pyro" data-effects="粒子|烟雾" data-text="applied houdini particles ii - velocity fields（steven knipping） 速度场驱动粒子系统课：pyro 场做爆炸/羽流 + curl noise 场（含沿表面流动）+ 数据驱动着色/灯光。 pop粒子 pop advect pyro vop速度场">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1W1yKYkEEy/" target="_blank" rel="noopener"><img src="https://i0.hdslb.com/bfs/archive/971489760dfa7ab166ce46055893280a1379a4d9.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1W1yKYkEEy/" target="_blank" rel="noopener">Applied Houdini Particles II - Velocity Fields（Steven Knipping）</a><div class="scene">速度场驱动粒子系统课：Pyro 场做爆炸/羽流 + Curl Noise 场（含沿表面流动）+ 数据驱动着色/灯光。</div></td>
+  <td><span class="tag tag-author">Applied Houdini</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Pyro</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">烟雾</span></td>
+  <td><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">Pop Advect</span><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">VOP速度场</span></td>
+</tr>
+<tr data-authors="SideFX" data-modules="SOP" data-effects="流体|烟雾" data-text="houdini为如何体积创建循环动画 云/烟雾体积序列做无缝循环；首选 labs loop volume（含位移补偿），不规则位移时手动 time shift + transform + vdb combine。 vdb融合 循环动画">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=USpFpUyYx0o" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/USpFpUyYx0o/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=USpFpUyYx0o" target="_blank" rel="noopener">Houdini为如何体积创建循环动画</a><div class="scene">云/烟雾体积序列做无缝循环；首选 Labs Loop Volume（含位移补偿），不规则位移时手动 Time Shift + Transform + VDB Combine。</div></td>
+  <td><span class="tag tag-author">SideFX</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">烟雾</span></td>
+  <td><span class="tag tag-tech">VDB融合</span><span class="tag tag-tech">循环动画</span></td>
+</tr>
+<tr data-authors="SideFX" data-modules="SOP|POPs|Pyro" data-effects="粒子|烟雾" data-text="高速移动物体发射不端层的方法 高速旋转/爆炸/烟雾驱动场景下避免粒子断层；用泰勒级数三阶手动插值（luma 方案）替换 pop source 原生 interpolate。 pop粒子 pop advect">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1P94y187u7/" target="_blank" rel="noopener"><img src="https://i0.hdslb.com/bfs/archive/f3e7e58bd8c0be8ae1d790e63fdc51554e7e6dcf.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1P94y187u7/" target="_blank" rel="noopener">高速移动物体发射不端层的方法</a><div class="scene">高速旋转/爆炸/烟雾驱动场景下避免粒子断层；用泰勒级数三阶手动插值（Luma 方案）替换 POP Source 原生 Interpolate。</div></td>
+  <td><span class="tag tag-author">SideFX</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Pyro</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">烟雾</span></td>
+  <td><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">Pop Advect</span></td>
+</tr>
+<tr data-authors="NFX" data-modules="SOP|POPs" data-effects="流体|角色FX" data-text="houdini教程——程序化眼泪 叙事型可控单颗泪滴；随机小泪滴用 popnet。 样条引导 ray吸附 vdb融合">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=VHTJUT6MUTk" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/VHTJUT6MUTk/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=VHTJUT6MUTk" target="_blank" rel="noopener">houdini教程——程序化眼泪</a><div class="scene">叙事型可控单颗泪滴；随机小泪滴用 Popnet。</div></td>
+  <td><span class="tag tag-author">NFX</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span></td>
+  <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">角色FX</span></td>
+  <td><span class="tag tag-tech">样条引导</span><span class="tag tag-tech">Ray吸附</span><span class="tag tag-tech">VDB融合</span></td>
+</tr>
+<tr data-authors="Adam Hogan" data-modules="SOP|POPs|Vellum|LOP/Solaris|Karma" data-effects="粒子|消散|布料" data-text="foundation 旗帜片头复刻（adam hogan） 《基地》片头旗帜复刻：vellum 布料 + rest 上 clip 出磨损 + freeze 后 attribute interpolate 转粒子 + vop 双流速度场 + karma/solaris 三 pass + ae 合成。 pop粒子 vellum vop速度场 几何转粒子 rest上做mask post-sim整形">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=F3IXF0YlbyY" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/F3IXF0YlbyY/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=F3IXF0YlbyY" target="_blank" rel="noopener">Foundation 旗帜片头复刻（Adam Hogan）</a><div class="scene">《基地》片头旗帜复刻：Vellum 布料 + rest 上 clip 出磨损 + freeze 后 Attribute Interpolate 转粒子 + VOP 双流速度场 + Karma/Solaris 三 pass + AE 合成。</div></td>
+  <td><span class="tag tag-author">Adam Hogan</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Vellum</span><span class="tag tag-module">LOP/Solaris</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">消散</span><span class="tag tag-effect">布料</span></td>
+  <td><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">Vellum</span><span class="tag tag-tech">VOP速度场</span><span class="tag tag-tech">几何转粒子</span><span class="tag tag-tech">rest上做mask</span><span class="tag tag-tech">post-sim整形</span></td>
+</tr>
+<tr data-authors="Konstantin Magnus" data-modules="SOP" data-effects="程序化建模|渲染|合成" data-text="提取模型外轮廓 屏幕空间给物体描边；tondc 投影 + triangulate 2d 的 silhouette 剔除多余面 + divide 提取外边界。 外轮廓提取">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=5iMOHBkcxPA" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/5iMOHBkcxPA/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=5iMOHBkcxPA" target="_blank" rel="noopener">提取模型外轮廓</a><div class="scene">屏幕空间给物体描边；toNDC 投影 + Triangulate 2D 的 Silhouette 剔除多余面 + Divide 提取外边界。</div></td>
+  <td><span class="tag tag-author">Konstantin Magnus</span></td>
+  <td><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">程序化建模</span><span class="tag tag-effect">渲染</span><span class="tag tag-effect">合成</span></td>
+  <td><span class="tag tag-tech">外轮廓提取</span></td>
+</tr>
+<tr data-authors="VFX Grace" data-modules="SOP|Pyro|Volume|Karma" data-effects="烟雾|渲染|合成" data-text="vfx grace - realistic dynamic clouds（houdini 大型云场景） 10 小时大体量云模拟系统课：上半场讲 pyro 工程化（force field / 多层 noise / 提速），下半场两个 case 实战 —— case1 中等规模云、case2 影视级三层分层云海（foreground/mid/background）。 pyro 实例化">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1CK4y1N77o/" target="_blank" rel="noopener"><img src="https://i0.hdslb.com/bfs/archive/ee68299f942e41e3a778801c9fb0737559e6de58.png" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1CK4y1N77o/" target="_blank" rel="noopener">VFX Grace - Realistic Dynamic Clouds（Houdini 大型云场景）</a><div class="scene">10 小时大体量云模拟系统课：上半场讲 Pyro 工程化（Force Field / 多层 noise / 提速），下半场两个 Case 实战 —— Case1 中等规模云、Case2 影视级三层分层云海（foreground/mid/background）。</div></td>
+  <td><span class="tag tag-author">VFX Grace</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">渲染</span><span class="tag tag-effect">合成</span></td>
+  <td><span class="tag tag-tech">Pyro</span><span class="tag tag-tech">实例化</span></td>
+</tr>
+<tr data-authors="Break Your Crayons" data-modules="SOP|Pyro|Volume|LOP/Solaris|Karma" data-effects="烟雾|渲染" data-text="byc cloud simulation course - houdini 云模拟（break your crayons） 高分辨率 3d 云模拟系统课：pyro 解算器六大核心力（wind/cooling/ambient temp/height mask/disturbance/vortex）+ wedge caching 批量跑参 + blender cycles &amp; karma 双渲染管线。 pyro">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1DmnbzvEd9/" target="_blank" rel="noopener"><img src="https://i1.hdslb.com/bfs/archive/54c4a3edd1bfb077b3a126ffb83e9e01437a0972.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1DmnbzvEd9/" target="_blank" rel="noopener">BYC Cloud Simulation Course - Houdini 云模拟（Break Your Crayons）</a><div class="scene">高分辨率 3D 云模拟系统课：Pyro 解算器六大核心力（Wind/Cooling/Ambient Temp/Height Mask/Disturbance/Vortex）+ Wedge Caching 批量跑参 + Blender Cycles &amp; Karma 双渲染管线。</div></td>
+  <td><span class="tag tag-author">Break Your Crayons</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">Pyro</span><span class="tag tag-module">Volume</span><span class="tag tag-module">LOP/Solaris</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">渲染</span></td>
+  <td><span class="tag tag-tech">Pyro</span></td>
+</tr>
+<tr data-authors="RMA FIRE" data-modules="SOP|POPs|Karma" data-effects="渲染|合成|粒子" data-text="rma fire - rendering dissolving particles in houdini 溶解粒子的渲染续集：pack and instance + emissive age ramp + volume light 雾 + 7 个 aov pass + 合成 bloom/motionblur/dof/grading 全流程电影级 lookdev。 实例化">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=0hxqCoCCfEY" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/0hxqCoCCfEY/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=0hxqCoCCfEY" target="_blank" rel="noopener">RMA FIRE - Rendering Dissolving Particles in Houdini</a><div class="scene">溶解粒子的渲染续集：Pack and Instance + Emissive age ramp + Volume light 雾 + 7 个 AOV pass + 合成 Bloom/MotionBlur/DoF/Grading 全流程电影级 lookdev。</div></td>
+  <td><span class="tag tag-author">RMA FIRE</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">渲染</span><span class="tag tag-effect">合成</span><span class="tag tag-effect">粒子</span></td>
+  <td><span class="tag tag-tech">实例化</span></td>
+</tr>
+<tr data-authors="RMA FIRE" data-modules="SOP|POPs" data-effects="粒子|消散" data-text="rma fire - dissolving particles in houdini 物体溶解效果通用框架：mesh 粒子化 + mask 控激活 + curl noise drag 飘逸感 + age fade。漫威灰飞烟灭/魔法消失/沙化都能套。 pop粒子 几何转粒子 rest上做mask 实例化">
+  <td class="cover-cell"><a href="https://www.youtube.com/watch?v=TP6SPXjSpeY" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/TP6SPXjSpeY/maxresdefault.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=TP6SPXjSpeY" target="_blank" rel="noopener">RMA FIRE - Dissolving Particles in Houdini</a><div class="scene">物体溶解效果通用框架：mesh 粒子化 + mask 控激活 + Curl Noise drag 飘逸感 + age fade。漫威灰飞烟灭/魔法消失/沙化都能套。</div></td>
+  <td><span class="tag tag-author">RMA FIRE</span></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">POPs</span></td>
+  <td><span class="tag tag-effect">粒子</span><span class="tag tag-effect">消散</span></td>
+  <td><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">几何转粒子</span><span class="tag tag-tech">rest上做mask</span><span class="tag tag-tech">实例化</span></td>
+</tr>
+<tr data-authors="Sadjad Rabiee" data-modules="POPs|DOP/Pyro|SOP|Karma" data-effects="爆炸|烟雾|粒子" data-text="sadjad rabiee — pyro fx tutorial part 02：shockwave + trail explosion pyro 爆炸进阶：冲击波（贴地球面波，buoy=0/cooling 高/瞬时 source）+ 拖尾爆炸（粒子驱动 source，buoy 高/cooling 低/age 控密度温度）。两套独立 sim 分层渲染合成。sadjad rabiee 出品，业内公认的双件套流程。 pyro solver pop粒子 粒子驱动source 分层渲染">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1Tg4y1N7He/" target="_blank" rel="noopener"><img src="https://i2.hdslb.com/bfs/archive/b9d2d4610cd3db41a19ffbf61314490bf0253ee2.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1Tg4y1N7He/" target="_blank" rel="noopener">Sadjad Rabiee — Pyro FX Tutorial Part 02：Shockwave + Trail Explosion</a><div class="scene">Pyro 爆炸进阶：冲击波（贴地球面波，buoy=0/cooling 高/瞬时 source）+ 拖尾爆炸（粒子驱动 source，buoy 高/cooling 低/age 控密度温度）。两套独立 sim 分层渲染合成。Sadjad Rabiee 出品，业内公认的双件套流程。</div></td>
+  <td><span class="tag tag-author">Sadjad Rabiee</span></td>
+  <td><span class="tag tag-module">POPs</span><span class="tag tag-module">DOP/Pyro</span><span class="tag tag-module">SOP</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">爆炸</span><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">粒子</span></td>
+  <td><span class="tag tag-tech">Pyro Solver</span><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">粒子驱动source</span><span class="tag tag-tech">分层渲染</span></td>
+</tr>
+<tr data-authors="Sadjad Rabiee" data-modules="POPs|DOP/Pyro|SOP|Karma" data-effects="爆炸|烟雾|粒子" data-text="sadjad rabiee — pyro fx tutorial part 02：shockwave + trail explosion pyro 爆炸进阶：冲击波（贴地球面波，buoy=0/cooling 高/瞬时 source）+ 拖尾爆炸（粒子驱动 source，buoy 高/cooling 低/age 控密度温度）。两套独立 sim 分层渲染合成。sadjad rabiee 出品，业内公认的双件套流程。 pyro solver pop粒子 粒子驱动source 分层渲染">
+  <td class="cover-cell"><a href="https://www.bilibili.com/video/BV1Tg4y1N7He/" target="_blank" rel="noopener"><img src="https://i2.hdslb.com/bfs/archive/b9d2d4610cd3db41a19ffbf61314490bf0253ee2.jpg" loading="lazy" alt="cover"></a></td>
+  <td class="title-cell"><a href="https://www.bilibili.com/video/BV1Tg4y1N7He/" target="_blank" rel="noopener">Sadjad Rabiee — Pyro FX Tutorial Part 02：Shockwave + Trail Explosion</a><div class="scene">Pyro 爆炸进阶：冲击波（贴地球面波，buoy=0/cooling 高/瞬时 source）+ 拖尾爆炸（粒子驱动 source，buoy 高/cooling 低/age 控密度温度）。两套独立 sim 分层渲染合成。Sadjad Rabiee 出品，业内公认的双件套流程。</div></td>
+  <td><span class="tag tag-author">Sadjad Rabiee</span></td>
+  <td><span class="tag tag-module">POPs</span><span class="tag tag-module">DOP/Pyro</span><span class="tag tag-module">SOP</span><span class="tag tag-module">Karma</span></td>
+  <td><span class="tag tag-effect">爆炸</span><span class="tag tag-effect">烟雾</span><span class="tag tag-effect">粒子</span></td>
+  <td><span class="tag tag-tech">Pyro Solver</span><span class="tag tag-tech">POP粒子</span><span class="tag tag-tech">粒子驱动source</span><span class="tag tag-tech">分层渲染</span></td>
+</tr>
+  </tbody>
+</table>
+
+<footer>共 54 条 · 数据来自 Notion「特效技法索引」 · 点击封面或标题跳转原视频</footer>
+
+<script>
+  const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
+  const rows = Array.from(document.querySelectorAll('#tbody tr'));
+
+  function applyFilters() {
+    let visible = 0;
+    rows.forEach(tr => {
+      const auths = (tr.dataset.authors || '').split('|');
+      const mods  = (tr.dataset.modules || '').split('|');
+      const effs  = (tr.dataset.effects || '').split('|');
+      const text  = tr.dataset.text || '';
+
+      const okAuthor = filters.author.size === 0 || [...filters.author].every(a => auths.includes(a));
+      const okModule = filters.module.size === 0 || [...filters.module].every(m => mods.includes(m));
+      const okEffect = filters.effect.size === 0 || [...filters.effect].every(e => effs.includes(e));
+      const okText   = !filters.text || text.includes(filters.text);
+
+      const show = okAuthor && okModule && okEffect && okText;
+      tr.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    document.getElementById('visible').textContent = visible;
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cls = btn.classList.contains('author') ? 'author'
+                : btn.classList.contains('module') ? 'module'
+                : 'effect';
+      const val = btn.dataset[cls];
+      if (filters[cls].has(val)) {
+        filters[cls].delete(val);
+        btn.classList.remove('active', cls);
+      } else {
+        filters[cls].add(val);
+        btn.classList.add('active', cls);
+      }
+      applyFilters();
+    });
+  });
+
+  document.getElementById('search').addEventListener('input', e => {
+    filters.text = e.target.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    filters.author.clear(); filters.module.clear(); filters.effect.clear(); filters.text = '';
+    document.querySelectorAll('.filter-btn.active').forEach(b => b.classList.remove('active', 'author', 'module', 'effect'));
+    document.getElementById('search').value = '';
+    applyFilters();
+  });
+</script>
+</body>
+</html>
