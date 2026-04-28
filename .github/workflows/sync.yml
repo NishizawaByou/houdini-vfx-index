@@ -1,0 +1,40 @@
+name: Sync from Notion
+
+on:
+  schedule:
+    # 每日北京时间凌晨 4:00（UTC 20:00 前一日）
+    - cron: '0 20 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build HTML from Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB: 34fa083d-2ab2-81fd-bdcf-fa52eb77bf72
+        run: node build.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "🤖 Auto sync from Notion ($(date -u +%Y-%m-%d))"
+            git push
+          fi
