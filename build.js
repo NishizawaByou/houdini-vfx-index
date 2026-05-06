@@ -75,24 +75,37 @@ async function getBiliCover(bvid) {
 }
 
 (async () => {
-  console.log('Notion → 拉取数据库...');
-  const q = await httpReq({
-    hostname: 'api.notion.com',
-    path: `/v1/databases/${DB}/query`,
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${TOKEN}`,
-      'Notion-Version': VERSION,
-      'Content-Type': 'application/json'
-    }
-  }, JSON.stringify({ page_size: 100, sorts: [{ property: '作者', direction: 'ascending' }] }));
+  console.log('Notion → 拉取数据库（翻页）...');
+  let allResults = [];
+  let cursor = null;
+  let pageNum = 0;
+  do {
+    const body = { page_size: 100, sorts: [{ property: '作者', direction: 'ascending' }] };
+    if (cursor) body.start_cursor = cursor;
+    const q = await httpReq({
+      hostname: 'api.notion.com',
+      path: `/v1/databases/${DB}/query`,
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${TOKEN}`,
+        'Notion-Version': VERSION,
+        'Content-Type': 'application/json'
+      }
+    }, JSON.stringify(body));
 
-  if (q.status !== 200) {
-    console.error('Notion API 失败:', q.body.substring(0, 400));
-    process.exit(1);
-  }
-  const data = JSON.parse(q.body);
-  console.log(`共 ${data.results.length} 条`);
+    if (q.status !== 200) {
+      console.error('Notion API 失败:', q.body.substring(0, 400));
+      process.exit(1);
+    }
+    const data = JSON.parse(q.body);
+    allResults = allResults.concat(data.results);
+    pageNum++;
+    console.log(`  第 ${pageNum} 页: +${data.results.length} 条 (累计 ${allResults.length})`);
+    cursor = data.has_more ? data.next_cursor : null;
+  } while (cursor);
+
+  console.log(`共 ${allResults.length} 条（跨 ${pageNum} 页）`);
+  const data = { results: allResults };
 
   const rows = [];
   for (let i = 0; i < data.results.length; i++) {
