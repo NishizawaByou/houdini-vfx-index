@@ -899,9 +899,9 @@ function applyFilters() {
     const mods  = (tr.dataset.modules || '').split('|');
     const effs  = (tr.dataset.effects || '').split('|');
     const text  = tr.dataset.text || '';
-    const okAuthor = filters.author.size === 0 || [...filters.author].every(a => auths.includes(a));
-    const okModule = filters.module.size === 0 || [...filters.module].every(m => mods.includes(m));
-    const okEffect = filters.effect.size === 0 || [...filters.effect].every(e => effs.includes(e));
+    const okAuthor = filters.author.size === 0 || [...filters.author].some(a => auths.includes(a));
+    const okModule = filters.module.size === 0 || [...filters.module].some(m => mods.includes(m));
+    const okEffect = filters.effect.size === 0 || [...filters.effect].some(e => effs.includes(e));
     const okText   = !filters.text || text.includes(filters.text);
     const show = okAuthor && okModule && okEffect && okText;
     tr.classList.toggle('hidden', !show);
