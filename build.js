@@ -7,6 +7,11 @@ const TOKEN = process.env.NOTION_TOKEN;
 const DB    = process.env.NOTION_DB || '34fa083d-2ab2-81fd-bdcf-fa52eb77bf72';
 const VERSION = '2022-06-28';
 
+// 加载 SideFX cover 缓存（avoid rate-limit on every build）
+let SIDEFX_CACHE = {};
+try { SIDEFX_CACHE = JSON.parse(fs.readFileSync('sidefx_covers.json', 'utf8')); }
+catch (e) { console.log('(no sidefx_covers.json cache)'); }
+
 if (!TOKEN) {
   console.error('❌ 缺少 NOTION_TOKEN 环境变量');
   process.exit(1);
@@ -31,6 +36,8 @@ function parseSource(url) {
   m = url.match(/youtube\.com\/watch\?v=([\w\-]+)/); if (m) return { type: 'yt', id: m[1] };
   m = url.match(/youtu\.be\/([\w\-]+)/);             if (m) return { type: 'yt', id: m[1] };
   m = url.match(/bilibili\.com\/video\/(BV[\w]+)/i); if (m) return { type: 'bili', id: m[1] };
+  m = url.match(/^https?:\/\/(?:www\.)?sidefx\.com\/tutorials\/[^?#]+/i); if (m) return { type: 'sidefx', id: url };
+  m = url.match(/vimeo\.com\/(\d+)/); if (m) return { type: 'vimeo', id: m[1] };
   return null;
 }
 
@@ -70,6 +77,60 @@ async function getBiliCover(bvid) {
   try {
     const j = JSON.parse(r.body);
     if (j.code === 0 && j.data.pic) return j.data.pic.replace(/^http:/, 'https:');
+  } catch (e) {}
+  return null;
+}
+
+// SideFX 教程页：优先用本地缓存（sidefx_covers.json），失败再抓 og:image / vimeo
+async function getSideFXCover(pageUrl) {
+  // 优先查缓存（避免 rate limit）
+  if (SIDEFX_CACHE[pageUrl]) return SIDEFX_CACHE[pageUrl];
+
+  const u = new URL(pageUrl);
+  // 重试 3 次，rate limit 时退避
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await httpReq({
+      hostname: u.hostname,
+      path: u.pathname + u.search,
+      method: 'GET',
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+    });
+    if (r.status === 429 || r.status === 503) {
+      const wait = 5000 * (attempt + 1);
+      console.log(`    [SideFX ${r.status}] 等 ${wait}ms 重试 (attempt ${attempt+1})`);
+      await new Promise(rr => setTimeout(rr, wait));
+      continue;
+    }
+    if (r.status !== 200) {
+      console.log(`    [SideFX ${r.status}] ${pageUrl}`);
+      return null;
+    }
+    const html = r.body || '';
+    // 1) og:image —— 排除站点默认 fallback
+    let m = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
+    if (m && m[1] && !/apple-touch-icon|favicon|default[-_]?cover/i.test(m[1])) return m[1];
+    // 2) twitter:image
+    m = html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+    if (m && m[1] && !/apple-touch-icon|favicon|default[-_]?cover/i.test(m[1])) return m[1];
+    // 3) 解析 vimeo iframe 拿 vimeo thumbnail
+    m = html.match(/player\.vimeo\.com\/video\/(\d+)/);
+    if (m && m[1]) return await getVimeoCover(m[1]);
+    return null;
+  }
+  return null;
+}
+
+async function getVimeoCover(vimeoId) {
+  // 公共 oembed API
+  const r = await httpReq({
+    hostname: 'vimeo.com',
+    path: '/api/oembed.json?url=https%3A//vimeo.com/' + vimeoId,
+    method: 'GET',
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  });
+  try {
+    const j = JSON.parse(r.body);
+    if (j.thumbnail_url) return j.thumbnail_url;
   } catch (e) {}
   return null;
 }
@@ -124,11 +185,16 @@ async function getBiliCover(bvid) {
     const src = parseSource(url);
     let cover = '';
     if (src) {
-      cover = src.type === 'yt' ? await getYTCover(src.id) : await getBiliCover(src.id);
+      if (src.type === 'yt') cover = await getYTCover(src.id);
+      else if (src.type === 'bili') cover = await getBiliCover(src.id);
+      else if (src.type === 'sidefx') cover = await getSideFXCover(src.id);
+      else if (src.type === 'vimeo') cover = await getVimeoCover(src.id);
     }
     rows.push({ title, url, author, modules, effects, tags, scene, cover: cover || '' });
     console.log(`[${i+1}/${data.results.length}] ${cover ? 'OK' : '--'} | ${title.substring(0,55)}`);
-    await new Promise(r => setTimeout(r, 150));
+    // SideFX 教程页有 rate limit，sidefx 抓取后多等一会
+    const delay = src && src.type === 'sidefx' ? 1500 : 150;
+    await new Promise(r => setTimeout(r, delay));
   }
 
   const allAuthors = [...new Set(rows.flatMap(r => r.author))].sort();
