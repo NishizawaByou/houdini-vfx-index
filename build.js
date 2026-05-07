@@ -141,7 +141,7 @@ async function getBiliCover(bvid) {
   const tableRows = rows.map(r => {
     const dataAttrs = `data-authors="${r.author.join('|')}" data-modules="${r.modules.join('|')}" data-effects="${r.effects.join('|')}" data-text="${ESC((r.title + ' ' + r.scene + ' ' + r.tags.join(' ')).toLowerCase())}"`;
     const cover = r.cover
-      ? `<a href="${ESC(r.url)}" target="_blank" rel="noopener"><img src="${ESC(r.cover)}" loading="lazy" alt="cover"></a>`
+      ? `<a href="${ESC(r.url)}" target="_blank" rel="noopener"><img src="${ESC(r.cover)}" loading="lazy" referrerpolicy="no-referrer" alt="cover"></a>`
       : '<div class="no-cover">无封面</div>';
     return `<tr ${dataAttrs}>
   <td class="cover-cell">${cover}</td>
@@ -160,6 +160,7 @@ async function getBiliCover(bvid) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
 <title>特效技法索引 · 封面表格</title>
 <style>
   * { box-sizing: border-box; }
