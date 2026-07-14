@@ -50,7 +50,7 @@
 <body>
 <header>
   <h1>🎯 特效技法索引</h1>
-  <div class="stats">共 <span id="total">136</span> 条教程，当前显示 <span id="visible">136</span> 条 · 上次同步：2026/7/14 04:46:45</div>
+  <div class="stats">共 <span id="total">137</span> 条教程，当前显示 <span id="visible">137</span> 条 · 上次同步：2026/7/15 04:48:05</div>
   <div class="filter-row">
     <label>搜索</label>
     <div class="filter-group"><input id="search" type="text" placeholder="搜索标题 / 标签 / 描述..."><button id="reset">重置筛选</button></div>
@@ -310,9 +310,9 @@
   <td><span class="tag tag-effect">布料</span><span class="tag tag-effect">程序化变形</span><span class="tag tag-effect">充气效果</span></td>
   <td><span class="tag tag-tech">充气压力管</span><span class="tag tag-tech">布料模拟</span></td>
 </tr>
-<tr data-authors="Entagma" data-modules="SOP|VOPs|FLIP" data-effects="流体|渲染|程序化变形" data-text="guest tutorial: meshing small scale flip sims 客人教程：小规模 flip 模拟的网格化技术，解决小尺度流体的表面重建质量问题。 surface reconstruction 小尺度 flip">
+<tr data-authors="Entagma" data-modules="SOP|VOPs|FLIP" data-effects="流体|渲染|程序化变形" data-text="guest tutorial: meshing small scale flip sims 客人教程：小规模 flip 模拟的网格化技��，解决小尺度流体的表面重建质量问题。 surface reconstruction 小尺度 flip">
   <td class="cover-cell"><a href="https://www.youtube.com/watch?v=HcBxUj4yGQ4" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/HcBxUj4yGQ4/maxresdefault.jpg" loading="lazy" referrerpolicy="no-referrer" alt="cover"></a></td>
-  <td class="title-cell"><a href="https://www.youtube.com/watch?v=HcBxUj4yGQ4" target="_blank" rel="noopener">Guest Tutorial: Meshing Small Scale Flip Sims</a><div class="scene">客人教程：小规模 FLIP 模拟的网格化技术，解决小尺度流体的表面重建质量问题。</div></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=HcBxUj4yGQ4" target="_blank" rel="noopener">Guest Tutorial: Meshing Small Scale Flip Sims</a><div class="scene">客人教程：小规模 FLIP 模拟的网格化技��，解决小尺度流体的表面重建质量问题。</div></td>
   <td><span class="tag tag-author">Entagma</span></td>
   <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VOPs</span><span class="tag tag-module">FLIP</span></td>
   <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">渲染</span><span class="tag tag-effect">程序化变形</span></td>
@@ -998,6 +998,14 @@
   <td><span class="tag tag-effect">波浪</span><span class="tag tag-effect">程序化变形</span></td>
   <td><span class="tag tag-tech">Null handle 驱动</span><span class="tag tag-tech">矩阵旋转变形</span><span class="tag tag-tech">falloff power</span></td>
 </tr>
+<tr data-authors="" data-modules="VEX|RBD|SOP" data-effects="刚体破碎|程序化变形" data-text="houdini · packed 碎块绕边缘旋转（改 pivot）实战笔记 地裂上翘效果：packed 碎块默认绕质心旋转导致一半翘一半陷，改成绕靠裂缝的内侧边缘旋转。核心是改 intrinsic:pivot 并补偿 @p（否则跳位），配 packedfulltransform 原理拆解、三明治写法、以及如何求每块的边缘 pivot 与旋转轴。含 vex 避坑清单。 矩阵旋转变形 qrotate轴旋转 packed instance rotate around axis">
+  <td class="cover-cell"><div class="no-cover">无封面</div></td>
+  <td class="title-cell"><a href="" target="_blank" rel="noopener">Houdini · Packed 碎块绕边缘旋转（改 pivot）实战笔记</a><div class="scene">地裂上翘效果：packed 碎块默认绕质心旋转导致一半翘一半陷，改成绕靠裂缝的内侧边缘旋转。核心是改 intrinsic:pivot 并补偿 @P（否则跳位），配 packedfulltransform 原理拆解、三明治写法、以及如何求每块的边缘 pivot 与旋转轴。含 VEX 避坑清单。</div></td>
+  <td></td>
+  <td><span class="tag tag-module">VEX</span><span class="tag tag-module">RBD</span><span class="tag tag-module">SOP</span></td>
+  <td><span class="tag tag-effect">刚体破碎</span><span class="tag tag-effect">程序化变形</span></td>
+  <td><span class="tag tag-tech">矩阵旋转变形</span><span class="tag tag-tech">qrotate轴旋转</span><span class="tag tag-tech">packed instance</span><span class="tag tag-tech">rotate around axis</span></td>
+</tr>
 <tr data-authors="" data-modules="POPs" data-effects="粒子" data-text="屏前克隆条带（叶片/纸屑）拟真动画：4 种方案对比 + 回正代码 针对 popnet 克隆 sin 条带/叶片如何做出拟真（非纯随机）动画的系统整理。含 4 种方案（随机 orient / 阻尼弹簧回正 / 气动扭矩 / vellum 流式）对比与选型结论，以及可直接使用的回正 vex 代码逐行讲解。实测结论：龙卷风这类持续发射场景，反而是 popnet 克隆 sin 条带最实用。 pop粒子">
   <td class="cover-cell"><div class="no-cover">无封面</div></td>
   <td class="title-cell"><a href="" target="_blank" rel="noopener">屏前克隆条带（叶片/纸屑）拟真动画：4 种方案对比 + 回正代码</a><div class="scene">针对 POPnet 克隆 sin 条带/叶片如何做出拟真（非纯随机）动画的系统整理。含 4 种方案（随机 orient / 阻尼弹簧回正 / 气动扭矩 / Vellum 流式）对比与选型结论，以及可直接使用的回正 VEX 代码逐行讲解。实测结论：龙卷风这类持续发射场景，反而是 POPnet 克隆 sin 条带最实用。</div></td>
@@ -1152,7 +1160,7 @@
 </tr>
   </tbody>
 </table>
-<footer>共 136 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
+<footer>共 137 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
 <script>
 const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
 const rows = Array.from(document.querySelectorAll('#tbody tr'));
