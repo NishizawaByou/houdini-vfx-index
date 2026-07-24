@@ -50,7 +50,7 @@
 <body>
 <header>
   <h1>🎯 特效技法索引</h1>
-  <div class="stats">共 <span id="total">137</span> 条教程，当前显示 <span id="visible">137</span> 条 · 上次同步：2026/7/24 04:49:29</div>
+  <div class="stats">共 <span id="total">138</span> 条教程，当前显示 <span id="visible">138</span> 条 · 上次同步：2026/7/25 04:53:55</div>
   <div class="filter-row">
     <label>搜索</label>
     <div class="filter-group"><input id="search" type="text" placeholder="搜索标题 / 标签 / 描述..."><button id="reset">重置筛选</button></div>
@@ -206,9 +206,9 @@
   <td><span class="tag tag-effect">流体</span><span class="tag tag-effect">气泡</span><span class="tag tag-effect">水下</span></td>
   <td><span class="tag tag-tech">FLIP气泡</span><span class="tag tag-tech">次级元素</span></td>
 </tr>
-<tr data-authors="Entagma" data-modules="FLIP" data-effects="水彩|NPR渲染|颜料扩散" data-text="guest tutorial: (ab)using subsurface to simulate watercolour 滥用 sss 模拟水彩：把&quot;颜料在湿纸上扩散&quot;当&quot;光在介质里散射&quot;，用 principled shader 强 sss + mfp 控制晕染范围�� sss hack 水彩晕染">
+<tr data-authors="Entagma" data-modules="FLIP" data-effects="水彩|NPR渲染|颜料扩散" data-text="guest tutorial: (ab)using subsurface to simulate watercolour 滥用 sss 模拟水彩：把&quot;颜料在湿纸上扩散&quot;当&quot;光在介质里散射&quot;，用 principled shader 强 sss + mfp 控制晕染范围。 sss hack 水彩晕染">
   <td class="cover-cell"><a href="https://www.youtube.com/watch?v=cInM80jJNU0" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/cInM80jJNU0/maxresdefault.jpg" loading="lazy" referrerpolicy="no-referrer" alt="cover"></a></td>
-  <td class="title-cell"><a href="https://www.youtube.com/watch?v=cInM80jJNU0" target="_blank" rel="noopener">Guest Tutorial: (Ab)using subsurface to simulate watercolour</a><div class="scene">滥用 SSS 模拟水彩：把&quot;颜料在湿纸上扩散&quot;当&quot;光在介质里散射&quot;，用 Principled Shader 强 SSS + MFP 控制晕染范围��</div></td>
+  <td class="title-cell"><a href="https://www.youtube.com/watch?v=cInM80jJNU0" target="_blank" rel="noopener">Guest Tutorial: (Ab)using subsurface to simulate watercolour</a><div class="scene">滥用 SSS 模拟水彩：把&quot;颜料在湿纸上扩散&quot;当&quot;光在介质里散射&quot;，用 Principled Shader 强 SSS + MFP 控制晕染范围。</div></td>
   <td><span class="tag tag-author">Entagma</span></td>
   <td><span class="tag tag-module">FLIP</span></td>
   <td><span class="tag tag-effect">水彩</span><span class="tag tag-effect">NPR渲染</span><span class="tag tag-effect">颜料扩散</span></td>
@@ -998,6 +998,14 @@
   <td><span class="tag tag-effect">波浪</span><span class="tag tag-effect">程序化变形</span></td>
   <td><span class="tag tag-tech">Null handle 驱动</span><span class="tag tag-tech">矩阵旋转变形</span><span class="tag tag-tech">falloff power</span></td>
 </tr>
+<tr data-authors="" data-modules="SOP|VEX" data-effects="程序化建模" data-text="houdini 坏面检测与标注（法线翻转 / 细长 / 零面积） 多边形网格质量检查：用一个 primitive wrangle（前接 normal sop）一次性插出三类坏面——零/近零面积退化面、细长针状面、法线翻转面，写入图元组 bad_prims 并用 cd 分色高亮（红=零面积、橙=细长、紫=翻转）。只识别不修改，阈值可调。关键：run over 必须选 primitives，翻转检测需先接 normal 生成点法线。面积用 primintrinsic(&quot;measuredarea&quot;)、法线用 prim_normal（primneighbours 在 h21 prim wrangle 不可用）。已在 h21.0.700 实测通过。 vex mesh拆分">
+  <td class="cover-cell"><div class="no-cover">无封面</div></td>
+  <td class="title-cell"><a href="" target="_blank" rel="noopener">Houdini 坏面检测与标注（法线翻转 / 细长 / 零面积）</a><div class="scene">多边形网格质量检查：用一个 Primitive Wrangle（前接 Normal SOP）一次性插出三类坏面——零/近零面积退化面、细长针状面、法线翻转面，写入图元组 bad_prims 并用 Cd 分色高亮（红=零面积、橙=细长、紫=翻转）。只识别不修改，阈值可调。关键：Run Over 必须选 Primitives，翻转检测需先接 Normal 生成点法线。面积用 primintrinsic(&quot;measuredarea&quot;)、法线用 prim_normal（primneighbours 在 H21 prim wrangle 不可用）。已在 H21.0.700 实测通过。</div></td>
+  <td></td>
+  <td><span class="tag tag-module">SOP</span><span class="tag tag-module">VEX</span></td>
+  <td><span class="tag tag-effect">程序化建模</span></td>
+  <td><span class="tag tag-tech">VEX</span><span class="tag tag-tech">mesh拆分</span></td>
+</tr>
 <tr data-authors="" data-modules="VEX|RBD|SOP" data-effects="刚体破碎|程序化变形" data-text="houdini · packed 碎块绕边缘旋转（改 pivot）实战笔记 地裂上翘效果：packed 碎块默认绕质心旋转导致一半翘一半陷，改成绕靠裂缝的内侧边缘旋转。核心是改 intrinsic:pivot 并补偿 @p（否则跳位），配 packedfulltransform 原理拆解、三明治写法、以及如何求每块的边缘 pivot 与旋转轴。含 vex 避坑清单。 矩阵旋转变形 qrotate轴旋转 packed instance rotate around axis">
   <td class="cover-cell"><div class="no-cover">无封面</div></td>
   <td class="title-cell"><a href="" target="_blank" rel="noopener">Houdini · Packed 碎块绕边缘旋转（改 pivot）实战笔记</a><div class="scene">地裂上翘效果：packed 碎块默认绕质心旋转导致一半翘一半陷，改成绕靠裂缝的内侧边缘旋转。核心是改 intrinsic:pivot 并补偿 @P（否则跳位），配 packedfulltransform 原理拆解、三明治写法、以及如何求每块的边缘 pivot 与旋转轴。含 VEX 避坑清单。</div></td>
@@ -1160,7 +1168,7 @@
 </tr>
   </tbody>
 </table>
-<footer>共 137 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
+<footer>共 138 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
 <script>
 const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
 const rows = Array.from(document.querySelectorAll('#tbody tr'));
