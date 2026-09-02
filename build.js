@@ -196,7 +196,7 @@ async function getVimeoCover(vimeoId) {
     let cover = '';
     { const fp = p.properties['封面']; if (fp && fp.files && fp.files.length) { const f = fp.files[0]; cover = f.type === 'external' ? ((f.external && f.external.url) || '') : ((f.file && f.file.url) || ''); } }
     if (!cover) { for (const [key, cu] of COVER_OVERRIDES) { if (title.includes(key)) { cover = cu; break; } } }
-    rows.push({ title, url, author, modules, scene, cover: cover || '' });
+    rows.push({ title, url, author, modules, scene, cover: cover || '', notion: p.url || '' });
     console.log(`[${i+1}/${data.results.length}] ${cover ? 'OK' : '--'} | ${title.substring(0,55)}`);
     // SideFX 教程页有 rate limit，sidefx 抓取后多等一会
     const delay = 0;
@@ -227,12 +227,17 @@ async function getVimeoCover(vimeoId) {
       ...r.author.map(a => `<span class="tag tag-author">${ESC(a)}</span>`),
       ...r.modules.map(m => `<span class="tag tag-module">${ESC(m)}</span>`),
     ].join('');
+    const desc = r.scene
+      ? (r.notion
+          ? `<a class="card-desc card-desc-link" href="${ESC(r.notion)}" target="_blank" rel="noopener" title="点击查看 Notion 笔记">${ESC(r.scene)}</a>`
+          : `<p class="card-desc">${ESC(r.scene)}</p>`)
+      : '';
     return `<article class="card" ${dataAttrs}>
   <a class="card-cover" href="${ESC(r.url)}" target="_blank" rel="noopener">${cover}</a>
   <div class="card-body">
     <a class="card-title" href="${ESC(r.url)}" target="_blank" rel="noopener">${ESC(r.title)}</a>
     <div class="card-tags">${tags}</div>
-    ${r.scene ? `<p class="card-desc">${ESC(r.scene)}</p>` : ''}
+    ${desc}
   </div>
 </article>`;
   }).join('\n');
@@ -282,7 +287,9 @@ async function getVimeoCover(vimeoId) {
   .card-title { color: #37352f; font-weight: 600; font-size: 15px; line-height: 1.4; text-decoration: none; }
   .card-title:hover { color: #2383e2; }
   .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-  .card-desc { margin: 2px 0 0; color: #6b6a66; font-size: 12.5px; line-height: 1.6; }
+  .card-desc { margin: 2px 0 0; color: #6b6a66; font-size: 12.5px; line-height: 1.6; display: block; }
+  a.card-desc-link { text-decoration: none; cursor: pointer; transition: color 0.15s; }
+  a.card-desc-link:hover { color: #2383e2; }
   .tag { display: inline-block; padding: 2px 6px; margin: 2px 3px 2px 0; border-radius: 3px; font-size: 11px; line-height: 1.4; white-space: nowrap; }
   .tag-author { background: #fbe5e3; color: #c1352b; font-weight: 500; }
   .tag-module { background: #ddedea; color: #0f7b6c; }
