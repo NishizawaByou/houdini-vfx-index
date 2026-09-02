@@ -218,17 +218,23 @@ async function getVimeoCover(vimeoId) {
   const ESC = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const tagBtns = (arr, cls) => arr.map(t => `<button class="filter-btn ${cls}" data-${cls}="${ESC(t)}">${ESC(t)}</button>`).join('');
 
-  const tableRows = rows.map(r => {
+  const cards = rows.map(r => {
     const dataAttrs = `data-authors="${r.author.join('|')}" data-modules="${r.modules.join('|')}" data-text="${ESC((r.title + ' ' + r.scene).toLowerCase())}"`;
     const cover = r.cover
-      ? `<a href="${ESC(r.url)}" target="_blank" rel="noopener"><img src="${ESC(r.cover)}" loading="lazy" referrerpolicy="no-referrer" alt="cover"></a>`
+      ? `<img src="${ESC(r.cover)}" loading="lazy" referrerpolicy="no-referrer" alt="cover">`
       : '<div class="no-cover">无封面</div>';
-    return `<tr ${dataAttrs}>
-  <td class="cover-cell">${cover}</td>
-  <td class="title-cell"><a href="${ESC(r.url)}" target="_blank" rel="noopener">${ESC(r.title)}</a><div class="scene">${ESC(r.scene)}</div></td>
-  <td>${r.author.map(a => `<span class="tag tag-author">${ESC(a)}</span>`).join('')}</td>
-  <td>${r.modules.map(m => `<span class="tag tag-module">${ESC(m)}</span>`).join('')}</td>
-</tr>`;
+    const tags = [
+      ...r.author.map(a => `<span class="tag tag-author">${ESC(a)}</span>`),
+      ...r.modules.map(m => `<span class="tag tag-module">${ESC(m)}</span>`),
+    ].join('');
+    return `<article class="card" ${dataAttrs}>
+  <a class="card-cover" href="${ESC(r.url)}" target="_blank" rel="noopener">${cover}</a>
+  <div class="card-body">
+    <a class="card-title" href="${ESC(r.url)}" target="_blank" rel="noopener">${ESC(r.title)}</a>
+    <div class="card-tags">${tags}</div>
+    ${r.scene ? `<p class="card-desc">${ESC(r.scene)}</p>` : ''}
+  </div>
+</article>`;
   }).join('\n');
 
   const buildTime = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
@@ -261,24 +267,25 @@ async function getVimeoCover(vimeoId) {
   #reset { margin-left: 8px; padding: 6px 14px; border: 1px solid #e3e2de; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; }
   #reset:hover { background: #f1f0ed; }
   table { width: 100%; border-collapse: collapse; background: #fff; }
-  thead { position: sticky; top: 150px; z-index: 50; background: #f7f6f3; }
-  th { text-align: left; padding: 10px 12px; font-size: 12px; font-weight: 500; color: #787774; border-bottom: 1px solid #e3e2de; text-transform: uppercase; letter-spacing: 0.5px; }
-  td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid #ececea; }
-  tr:hover td { background: #fafaf9; }
-  .cover-cell { width: 320px; padding: 8px; }
-  .cover-cell img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; display: block; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; }
-  .cover-cell img:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .no-cover { width: 100%; height: 180px; background: #ececea; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #999; }
-  .title-cell { width: 280px; }
-  .title-cell a { color: #37352f; font-weight: 500; text-decoration: none; line-height: 1.4; display: block; }
-  .title-cell a:hover { color: #2383e2; text-decoration: underline; }
-  .scene { color: #787774; font-size: 12px; margin-top: 6px; line-height: 1.5; }
+  /* ===== 卡片画廊网格 ===== */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 24px; align-items: start; }
+  .card { background: #fff; border: 1px solid #e9e8e4; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .card-cover { display: block; width: 100%; aspect-ratio: 16 / 9; background: #ececea; overflow: hidden; }
+  .card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+  .card:hover .card-cover img { transform: scale(1.04); }
+  .card-cover .no-cover { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #b0afab; font-size: 13px; }
+  .card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .card-title { color: #37352f; font-weight: 600; font-size: 15px; line-height: 1.4; text-decoration: none; }
+  .card-title:hover { color: #2383e2; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .card-desc { margin: 2px 0 0; color: #6b6a66; font-size: 12.5px; line-height: 1.6; }
   .tag { display: inline-block; padding: 2px 6px; margin: 2px 3px 2px 0; border-radius: 3px; font-size: 11px; line-height: 1.4; white-space: nowrap; }
   .tag-author { background: #fbe5e3; color: #c1352b; font-weight: 500; }
   .tag-module { background: #ddedea; color: #0f7b6c; }
   .tag-effect { background: #fdecc8; color: #b07a1c; }
   .tag-tech   { background: #f1f0ed; color: #50504e; }
-  tr.hidden { display: none; }
+  .card.hidden { display: none; }
   footer { text-align: center; padding: 24px; color: #787774; font-size: 12px; }
 </style>
 </head>
@@ -293,27 +300,24 @@ async function getVimeoCover(vimeoId) {
   <div class="filter-row"><label>作者</label><div class="filter-group">${tagBtns(allAuthors, 'author')}</div></div>
   <div class="filter-row"><label>模块</label><div class="filter-group">${tagBtns(allModules, 'module')}</div></div>
 </header>
-<table>
-  <thead><tr><th>封面</th><th>标题 / 简介</th><th>作者</th><th>Houdini模块</th></tr></thead>
-  <tbody id="tbody">
-${tableRows}
-  </tbody>
-</table>
+<main class="grid" id="grid">
+${cards}
+</main>
 <footer>共 ${rows.length} 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
 <script>
 const filters = { author: new Set(), module: new Set(), text: '' };
-const rows = Array.from(document.querySelectorAll('#tbody tr'));
+const rows = Array.from(document.querySelectorAll('#grid .card'));
 function applyFilters() {
   let visible = 0;
-  rows.forEach(tr => {
-    const auths = (tr.dataset.authors || '').split('|');
-    const mods  = (tr.dataset.modules || '').split('|');
-    const text  = tr.dataset.text || '';
+  rows.forEach(el => {
+    const auths = (el.dataset.authors || '').split('|');
+    const mods  = (el.dataset.modules || '').split('|');
+    const text  = el.dataset.text || '';
     const okAuthor = filters.author.size === 0 || [...filters.author].some(a => auths.includes(a));
     const okModule = filters.module.size === 0 || [...filters.module].some(m => mods.includes(m));
     const okText   = !filters.text || text.includes(filters.text);
     const show = okAuthor && okModule && okText;
-    tr.classList.toggle('hidden', !show);
+    el.classList.toggle('hidden', !show);
     if (show) visible++;
   });
   document.getElementById('visible').textContent = visible;
