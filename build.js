@@ -7,6 +7,19 @@ const TOKEN = process.env.NOTION_TOKEN;
 const DB    = process.env.NOTION_DB || '34fa083d-2ab2-81fd-bdcf-fa52eb77bf72';
 const VERSION = '2022-06-28';
 
+// 论文封面兜底：Notion「封面」字段为空时，按标题匹配用仓库内 covers/ 的 PDF 抽图
+// （Notion 有封面时仍优先用 Notion 的；这里只做 fallback，不覆盖）
+const COVER_OVERRIDES = [
+  ['Fluxed Animated Boundary', 'covers/fab_moana.jpg'],
+  ['Augmented MPM',            'covers/augmented_mpm.jpg'],
+  ['MPM Snow',                 'covers/mpm_snow.jpg'],
+  ['APIC',                     'covers/apic_jiang.jpg'],
+  ['Thin Film',                'covers/thin_film.jpg'],
+  ['Fluid Simulation for Computer Graphics', 'covers/bridson_fluids.jpg'],
+  ['Animating Sand as a Fluid', 'covers/sand_zhu_bridson.jpg'],
+  ['Surface Turbulence',       'covers/surface_turbulence.jpg'],
+];
+
 // 加载 SideFX cover 缓存（avoid rate-limit on every build）
 let SIDEFX_CACHE = {};
 try { SIDEFX_CACHE = JSON.parse(fs.readFileSync('sidefx_covers.json', 'utf8')); }
@@ -182,6 +195,7 @@ async function getVimeoCover(vimeoId) {
     }
     let cover = '';
     { const fp = p.properties['封面']; if (fp && fp.files && fp.files.length) { const f = fp.files[0]; cover = f.type === 'external' ? ((f.external && f.external.url) || '') : ((f.file && f.file.url) || ''); } }
+    if (!cover) { for (const [key, cu] of COVER_OVERRIDES) { if (title.includes(key)) { cover = cu; break; } } }
     rows.push({ title, url, author, modules, scene, cover: cover || '' });
     console.log(`[${i+1}/${data.results.length}] ${cover ? 'OK' : '--'} | ${title.substring(0,55)}`);
     // SideFX 教程页有 rate limit，sidefx 抓取后多等一会
