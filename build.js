@@ -268,7 +268,10 @@ async function getVimeoCover(vimeoId) {
   #reset:hover { background: #f1f0ed; }
   table { width: 100%; border-collapse: collapse; background: #fff; }
   /* ===== 卡片画廊网格 ===== */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 24px; align-items: stretch; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; padding: 24px; align-items: stretch; }
+  @media (max-width: 1400px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
   .card { background: #fff; border: 1px solid #e9e8e4; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
   .card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(-2px); }
   .card-cover { display: block; width: 100%; aspect-ratio: 16 / 9; background: #ececea; overflow: hidden; }
