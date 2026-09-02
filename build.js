@@ -171,41 +171,41 @@ async function getVimeoCover(vimeoId) {
   const rows = [];
   for (let i = 0; i < data.results.length; i++) {
     const p = data.results[i];
-    let title = '', url = '', author = [], modules = [], effects = [], tags = [], scene = '';
+    let title = '', url = '', author = [], modules = [], scene = '';
     for (const k of Object.keys(p.properties)) {
       const v = p.properties[k];
       if (v.type === 'title') title = v.title.map(t => t.plain_text).join('');
-      else if (v.type === 'url') url = v.url || '';
+      else if (v.id === 'ZsF%3B') url = (v.rich_text || []).map(t => t.href || t.plain_text).join('');
       else if (v.id === '%60XwP') author = (v.multi_select || []).map(o => o.name);
       else if (v.id === '%40HRA') modules = (v.multi_select || []).map(o => o.name);
-      else if (v.id === 'N%5B%7Cc') effects = (v.multi_select || []).map(o => o.name);
-      else if (v.id === 'V%7DkO') tags = (v.multi_select || []).map(o => o.name);
       else if (v.id === 'gOb%3E') scene = (v.rich_text || []).map(t => t.plain_text).join('');
     }
-    const src = parseSource(url);
     let cover = '';
-    if (src) {
-      if (src.type === 'yt') cover = await getYTCover(src.id);
-      else if (src.type === 'bili') cover = await getBiliCover(src.id);
-      else if (src.type === 'sidefx') cover = await getSideFXCover(src.id);
-      else if (src.type === 'vimeo') cover = await getVimeoCover(src.id);
-    }
-    rows.push({ title, url, author, modules, effects, tags, scene, cover: cover || '' });
+    { const fp = p.properties['封面']; if (fp && fp.files && fp.files.length) { const f = fp.files[0]; cover = f.type === 'external' ? ((f.external && f.external.url) || '') : ((f.file && f.file.url) || ''); } }
+    rows.push({ title, url, author, modules, scene, cover: cover || '' });
     console.log(`[${i+1}/${data.results.length}] ${cover ? 'OK' : '--'} | ${title.substring(0,55)}`);
     // SideFX 教程页有 rate limit，sidefx 抓取后多等一会
-    const delay = src && src.type === 'sidefx' ? 1500 : 150;
+    const delay = 0;
     await new Promise(r => setTimeout(r, delay));
   }
 
-  const allAuthors = [...new Set(rows.flatMap(r => r.author))].sort();
+  // 作者按篇数归类：>5 篇保留独立标签，其余全部归入「其他」
+  const authorCount = {};
+  rows.forEach(r => r.author.forEach(a => { authorCount[a] = (authorCount[a] || 0) + 1; }));
+  const commonAuthors = new Set(Object.keys(authorCount).filter(a => authorCount[a] > 5));
+  const mapAuthor = a => commonAuthors.has(a) ? a : '其他';
+  rows.forEach(r => { r.author = [...new Set(r.author.map(mapAuthor))]; });
+  const hasOther = rows.some(r => r.author.includes('其他'));
+  // 常见作者按篇数降序，「其他」始终排最后
+  const allAuthors = [...commonAuthors].sort((a, b) => authorCount[b] - authorCount[a]);
+  if (hasOther) allAuthors.push('其他');
   const allModules = [...new Set(rows.flatMap(r => r.modules))].sort();
-  const allEffects = [...new Set(rows.flatMap(r => r.effects))].sort();
 
   const ESC = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const tagBtns = (arr, cls) => arr.map(t => `<button class="filter-btn ${cls}" data-${cls}="${ESC(t)}">${ESC(t)}</button>`).join('');
 
   const tableRows = rows.map(r => {
-    const dataAttrs = `data-authors="${r.author.join('|')}" data-modules="${r.modules.join('|')}" data-effects="${r.effects.join('|')}" data-text="${ESC((r.title + ' ' + r.scene + ' ' + r.tags.join(' ')).toLowerCase())}"`;
+    const dataAttrs = `data-authors="${r.author.join('|')}" data-modules="${r.modules.join('|')}" data-text="${ESC((r.title + ' ' + r.scene).toLowerCase())}"`;
     const cover = r.cover
       ? `<a href="${ESC(r.url)}" target="_blank" rel="noopener"><img src="${ESC(r.cover)}" loading="lazy" referrerpolicy="no-referrer" alt="cover"></a>`
       : '<div class="no-cover">无封面</div>';
@@ -214,8 +214,6 @@ async function getVimeoCover(vimeoId) {
   <td class="title-cell"><a href="${ESC(r.url)}" target="_blank" rel="noopener">${ESC(r.title)}</a><div class="scene">${ESC(r.scene)}</div></td>
   <td>${r.author.map(a => `<span class="tag tag-author">${ESC(a)}</span>`).join('')}</td>
   <td>${r.modules.map(m => `<span class="tag tag-module">${ESC(m)}</span>`).join('')}</td>
-  <td>${r.effects.map(e => `<span class="tag tag-effect">${ESC(e)}</span>`).join('')}</td>
-  <td>${r.tags.map(t => `<span class="tag tag-tech">${ESC(t)}</span>`).join('')}</td>
 </tr>`;
   }).join('\n');
 
@@ -249,7 +247,7 @@ async function getVimeoCover(vimeoId) {
   #reset { margin-left: 8px; padding: 6px 14px; border: 1px solid #e3e2de; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; }
   #reset:hover { background: #f1f0ed; }
   table { width: 100%; border-collapse: collapse; background: #fff; }
-  thead { position: sticky; top: 196px; z-index: 50; background: #f7f6f3; }
+  thead { position: sticky; top: 150px; z-index: 50; background: #f7f6f3; }
   th { text-align: left; padding: 10px 12px; font-size: 12px; font-weight: 500; color: #787774; border-bottom: 1px solid #e3e2de; text-transform: uppercase; letter-spacing: 0.5px; }
   td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid #ececea; }
   tr:hover td { background: #fafaf9; }
@@ -280,30 +278,27 @@ async function getVimeoCover(vimeoId) {
   </div>
   <div class="filter-row"><label>作者</label><div class="filter-group">${tagBtns(allAuthors, 'author')}</div></div>
   <div class="filter-row"><label>模块</label><div class="filter-group">${tagBtns(allModules, 'module')}</div></div>
-  <div class="filter-row"><label>效果</label><div class="filter-group">${tagBtns(allEffects, 'effect')}</div></div>
 </header>
 <table>
-  <thead><tr><th>封面</th><th>标题 / 简介</th><th>作者</th><th>Houdini模块</th><th>效果类型</th><th>技术标签</th></tr></thead>
+  <thead><tr><th>封面</th><th>标题 / 简介</th><th>作者</th><th>Houdini模块</th></tr></thead>
   <tbody id="tbody">
 ${tableRows}
   </tbody>
 </table>
 <footer>共 ${rows.length} 条 · 数据来自 Notion「特效技法索引」 · 自动每日同步 · 点击封面或标题跳转原视频</footer>
 <script>
-const filters = { author: new Set(), module: new Set(), effect: new Set(), text: '' };
+const filters = { author: new Set(), module: new Set(), text: '' };
 const rows = Array.from(document.querySelectorAll('#tbody tr'));
 function applyFilters() {
   let visible = 0;
   rows.forEach(tr => {
     const auths = (tr.dataset.authors || '').split('|');
     const mods  = (tr.dataset.modules || '').split('|');
-    const effs  = (tr.dataset.effects || '').split('|');
     const text  = tr.dataset.text || '';
     const okAuthor = filters.author.size === 0 || [...filters.author].some(a => auths.includes(a));
     const okModule = filters.module.size === 0 || [...filters.module].some(m => mods.includes(m));
-    const okEffect = filters.effect.size === 0 || [...filters.effect].some(e => effs.includes(e));
     const okText   = !filters.text || text.includes(filters.text);
-    const show = okAuthor && okModule && okEffect && okText;
+    const show = okAuthor && okModule && okText;
     tr.classList.toggle('hidden', !show);
     if (show) visible++;
   });
@@ -311,7 +306,7 @@ function applyFilters() {
 }
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const cls = btn.classList.contains('author') ? 'author' : btn.classList.contains('module') ? 'module' : 'effect';
+    const cls = btn.classList.contains('author') ? 'author' : 'module';
     const val = btn.dataset[cls];
     if (filters[cls].has(val)) { filters[cls].delete(val); btn.classList.remove('active', cls); }
     else { filters[cls].add(val); btn.classList.add('active', cls); }
@@ -320,8 +315,8 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 });
 document.getElementById('search').addEventListener('input', e => { filters.text = e.target.value.trim().toLowerCase(); applyFilters(); });
 document.getElementById('reset').addEventListener('click', () => {
-  filters.author.clear(); filters.module.clear(); filters.effect.clear(); filters.text = '';
-  document.querySelectorAll('.filter-btn.active').forEach(b => b.classList.remove('active', 'author', 'module', 'effect'));
+  filters.author.clear(); filters.module.clear(); filters.text = '';
+  document.querySelectorAll('.filter-btn.active').forEach(b => b.classList.remove('active', 'author', 'module'));
   document.getElementById('search').value = '';
   applyFilters();
 });
